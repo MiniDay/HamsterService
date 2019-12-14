@@ -1,0 +1,6 @@
+name: HamsterService
+version: ${project.version}
+main: cn.hamster3.service.spigot.HamsterService
+load: STARTUP
+author: Hamster3
+website: https://github.com/ViosinDeng/HamsterBridge

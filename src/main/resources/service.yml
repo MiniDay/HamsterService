@@ -1,0 +1,38 @@
+# debug配置
+debug:
+  # 是否在后台输出插件信息
+  enable: true
+  # 是否在后台输出服务组启动的消息
+  start: true
+  # 是否在后台输出服务组关闭的消息
+  close: true
+  # 是否在后台输出注册消息
+  register: true
+  # 是否在后台输出服务器发送的消息
+  receive: true
+  # 是否在后台输出发送给服务器的消息
+  send: false
+  # 是否在后台输出广播的消息
+  broadcast: true
+  # 是否在后台输出连接的消息
+  connect: true
+
+# 消息组
+# 不同组之间的消息无法同步
+groups:
+  # 组名
+  default:
+    # 绑定本地哪个网卡
+    host: "localhost"
+    # 端口
+    port: 8520
+    # 密码
+    password: "password"
+#  survival:
+#    host: "localhost"
+#    port: 8521
+#    password: "password"
+#  skyBlock:
+#    host: "localhost"
+#    port: 8522
+#    password: "password"

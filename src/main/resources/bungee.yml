@@ -1,0 +1,6 @@
+name: HamsterService
+version: ${project.version}
+main: cn.hamster3.service.bungee.BungeeService
+author: Hamster3
+website: https://github.com/ViosinDeng/HamsterService
+
