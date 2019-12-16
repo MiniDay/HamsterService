@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 public final class HamsterService extends JavaPlugin {
     static ArrayList<ServicePreSendEvent> messages;
-
+    private static boolean enable;
     private static Logger logger;
     private static Channel channel;
     private static Bootstrap bootstrap;
@@ -50,15 +50,17 @@ public final class HamsterService extends JavaPlugin {
     }
 
     public static void sendMessage(String message) {
-        if (message == null) {
-            throw new IllegalArgumentException("消息不能被设置为 null !");
-        }
-        if (message.getBytes(StandardCharsets.UTF_8).length >= 0xffff) {
-            throw new IllegalArgumentException("消息总长度不能超过 65535 字节!");
-        }
-        ServicePreSendEvent event = new ServicePreSendEvent(message);
-        Bukkit.getPluginManager().callEvent(event);
-        sendMessage(event);
+        new Thread(() -> {
+            if (message == null) {
+                throw new IllegalArgumentException("消息不能被设置为 null !");
+            }
+            if (message.getBytes(StandardCharsets.UTF_8).length >= 0xffff) {
+                throw new IllegalArgumentException("消息总长度不能超过 65535 字节!");
+            }
+            ServicePreSendEvent event = new ServicePreSendEvent(message);
+            Bukkit.getPluginManager().callEvent(event);
+            sendMessage(event);
+        }).start();
     }
 
     public static void sendMessage(String message, Object... objects) {
@@ -66,22 +68,24 @@ public final class HamsterService extends JavaPlugin {
     }
 
     public static void sendMessage(String tag, String message) {
-        if (tag == null) {
-            sendMessage(message);
-            return;
-        }
-        if (!tag.matches("[a-zA-Z0-9_]*")) {
-            throw new IllegalArgumentException("tag 只能使用字母、数字或下划线!");
-        }
-        if (message == null) {
-            throw new IllegalArgumentException("消息不能被设置为 null !");
-        }
-        if ((tag + ":" + message).getBytes(StandardCharsets.UTF_8).length >= 0xffff) {
-            throw new IllegalArgumentException("消息总长度不能超过 65535 字节!");
-        }
-        ServicePreSendEvent event = new ServicePreSendEvent(tag, message);
-        Bukkit.getPluginManager().callEvent(event);
-        sendMessage(event);
+        new Thread(() -> {
+            if (tag == null) {
+                sendMessage(message);
+                return;
+            }
+            if (!tag.matches("[a-zA-Z0-9_]*")) {
+                throw new IllegalArgumentException("tag 只能使用字母、数字或下划线!");
+            }
+            if (message == null) {
+                throw new IllegalArgumentException("消息不能被设置为 null !");
+            }
+            if ((tag + ":" + message).getBytes(StandardCharsets.UTF_8).length >= 0xffff) {
+                throw new IllegalArgumentException("消息总长度不能超过 65535 字节!");
+            }
+            ServicePreSendEvent event = new ServicePreSendEvent(tag, message);
+            Bukkit.getPluginManager().callEvent(event);
+            sendMessage(event);
+        }).start();
     }
 
     public static void sendMessage(String tag, String message, Object... objects) {
@@ -117,8 +121,6 @@ public final class HamsterService extends JavaPlugin {
         } else {
             channel.writeAndFlush(event.getTag() + ":" + event.getMessage()).addListener(listener);
         }
-        System.out.println(event.getTag());
-        System.out.println(event.getMessage());
     }
 
     public static String getServerName() {
@@ -134,6 +136,9 @@ public final class HamsterService extends JavaPlugin {
     }
 
     static void reconnect() {
+        if (!enable) {
+            return;
+        }
         try {
             Thread.sleep(3000);
         } catch (InterruptedException ignored) {
@@ -155,6 +160,9 @@ public final class HamsterService extends JavaPlugin {
     }
 
     private static void connect() {
+        if (!enable) {
+            return;
+        }
         bootstrap.connect(serviceHost, servicePort).addListener((ChannelFutureListener) future -> {
             if (future.isSuccess()) {
                 Bukkit.getPluginManager().callEvent(new ServiceConnectedEvent());
@@ -171,6 +179,7 @@ public final class HamsterService extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        enable = true;
         messages = new ArrayList<>();
 
         logger = getLogger();
@@ -207,7 +216,10 @@ public final class HamsterService extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        enable = false;
         try {
+            channel.close();
+            channel = null;
             loopGroup.shutdownGracefully().await();
             loopGroup = null;
         } catch (InterruptedException ignored) {
