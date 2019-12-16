@@ -23,6 +23,12 @@ public class ServiceCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("service.admin")) {
+            TextComponent component = new TextComponent("你没有使用这个命令的权限!");
+            component.setColor(ChatColor.RED);
+            sender.sendMessage(component);
+            return;
+        }
         if (args.length < 1 || args[0].equalsIgnoreCase("help")) {
             sendHelp(sender);
             return;
