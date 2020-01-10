@@ -7,22 +7,22 @@ import java.util.Scanner;
 
 public class Test {
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("E:\\Code\\Java\\HamsterService\\src\\main\\java");
+        File file = new File("E:\\Code\\Java\\HamsterService\\src");
         System.out.println("代码总大小: " + getSize(file) / 1024.0 + " kb");
         System.out.println("代码总行数: " + getLine(file));
     }
 
     private static long getSize(File file) {
-        long l = 0;
+        long size = 0;
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files == null) {
                 return 0;
             }
             for (File children : files) {
-                l += getSize(children);
+                size += getSize(children);
             }
-            return l;
+            return size;
         }
         if (!file.getName().endsWith(".java")) {
             return 0;
@@ -31,16 +31,16 @@ public class Test {
     }
 
     private static long getLine(File file) throws FileNotFoundException {
-        long l = 0;
+        long line = 0;
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             if (files == null) {
                 return 0;
             }
             for (File children : files) {
-                l += getLine(children);
+                line += getLine(children);
             }
-            return l;
+            return line;
         }
         if (!file.getName().endsWith(".java")) {
             return 0;
@@ -48,9 +48,9 @@ public class Test {
         Scanner scanner = new Scanner(new FileInputStream(file), "UTF-8");
         while (scanner.hasNext()) {
             scanner.nextLine();
-            l++;
+            line++;
         }
         scanner.close();
-        return l;
+        return line;
     }
 }

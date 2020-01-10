@@ -28,16 +28,16 @@ public class ServiceSendEvent extends ServiceMessageEvent {
         success = false;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public boolean isSuccess() {
         return success;
     }
 
     public Throwable getCause() {
         return cause;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     @Override

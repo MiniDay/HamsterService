@@ -20,16 +20,16 @@ public class ServiceRegisteredEvent extends Event {
         this.cause = cause;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     public boolean isSuccess() {
         return success;
     }
 
     public String getCause() {
         return cause;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     @Override

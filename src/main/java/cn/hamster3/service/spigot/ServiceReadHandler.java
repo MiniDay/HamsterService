@@ -48,8 +48,7 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
                 HamsterService.sendMessage(event);
             }
             HamsterService.messages.clear();
-        }
-        else if (args[0].equalsIgnoreCase("registerFailed")){
+        } else if (args[0].equalsIgnoreCase("registerFailed")) {
             Bukkit.getPluginManager().callEvent(new ServiceRegisteredEvent(args[1]));
         }
     }

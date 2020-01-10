@@ -14,6 +14,7 @@ public class ServiceConnectListener implements Listener {
                 event.getConnection().getConnectionAddress().getHostString(),
                 event.getConnection().getConnectionAddress().getPort());
     }
+
     @EventHandler
     public void onServiceDisconnected(ServiceClientDisconnectedEvent event) {
         BungeeService.log("[-] [%s] <==== [%s]",
