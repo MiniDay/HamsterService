@@ -26,13 +26,14 @@ groups:
     host: "localhost"
     # 端口
     port: 8520
-    # 密码
-    password: "password"
+    serverID:
+      # 密码: 服务器ID
+      # 请为每个服务器分配不同的密码
+      "password1": "登录大厅1"
+      "password2": "登录大厅2"
 #  survival:
 #    host: "localhost"
 #    port: 8521
-#    password: "password"
-#  skyBlock:
-#    host: "localhost"
-#    port: 8522
-#    password: "password"
+#    serverID:
+#      "password1": "生存1服"
+#      "password2": "生存2服"

@@ -217,12 +217,16 @@ public final class HamsterService extends JavaPlugin {
     @Override
     public void onDisable() {
         enable = false;
-        try {
+        if (channel != null) {
             channel.close();
             channel = null;
-            loopGroup.shutdownGracefully().await();
-            loopGroup = null;
-        } catch (InterruptedException ignored) {
+        }
+        if (loopGroup != null) {
+            try {
+                loopGroup.shutdownGracefully().await();
+                loopGroup = null;
+            } catch (InterruptedException ignored) {
+            }
         }
     }
 }

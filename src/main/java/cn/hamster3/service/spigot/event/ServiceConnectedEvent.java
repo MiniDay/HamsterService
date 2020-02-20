@@ -10,6 +10,7 @@ public class ServiceConnectedEvent extends Event {
     private Throwable cause;
 
     public ServiceConnectedEvent() {
+        super(true);
         success = true;
     }
 

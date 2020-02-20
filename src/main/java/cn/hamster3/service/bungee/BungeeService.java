@@ -11,10 +11,12 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class BungeeService extends Plugin implements Listener {
@@ -67,9 +69,15 @@ public class BungeeService extends Plugin implements Listener {
 
         }
         for (String name : groups.getKeys()) {
-            String host = groups.getString("host");
-            int port = groups.getInt(name + ".port");
-            new ServiceGroup(host, port, name, groups.getString(name + ".password")).start();
+            Configuration groupConfig = groups.getSection(name);
+            String host = groupConfig.getString("host");
+            int port = groupConfig.getInt("port");
+            HashMap<String, String> serverID = new HashMap<>();
+            Configuration serverIDConfig = groupConfig.getSection("serverID");
+            for (String password : serverIDConfig.getKeys()) {
+                serverID.put(password, serverIDConfig.getString(password));
+            }
+            new ServiceGroup(host, port, name, serverID).start();
         }
         manager.registerCommand(this, new ServiceCommand());
     }

@@ -8,7 +8,6 @@ import cn.hamster3.service.spigot.HamsterService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.config.ServerInfo;
 
 import java.net.InetSocketAddress;
 
@@ -19,15 +18,6 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
     public ServiceReadHandler(ServiceGroup group, ServiceConnection connection) {
         this.group = group;
         this.connection = connection;
-    }
-
-    private static String getServerName(InetSocketAddress address) {
-        for (ServerInfo info : ProxyServer.getInstance().getServers().values()) {
-            if (info.getAddress().equals(address)) {
-                return info.getName();
-            }
-        }
-        return null;
     }
 
     @Override
@@ -77,31 +67,22 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
             if (connection.isRegistered()) {
                 return;
             }
+            String serverID = group.getServerID(args[1]);
+            if (serverID == null) {
+                connection.sendMessage("HamsterService", "registerFailed 服务组未设定密码: " + args[1]);
+                connection.disconnect();
+                ServiceClientRegisterEvent event = new ServiceClientRegisterEvent(group, connection, false, "服务组未设定该密码");
+                ProxyServer.getInstance().getPluginManager().callEvent(event);
+                return;
+            }
             try {
-                if (!group.getPassword().equals(args[1])) {
-                    connection.sendMessage("HamsterService", "registerFailed 验证密码错误");
-                    connection.disconnect();
-                    ServiceClientRegisterEvent event = new ServiceClientRegisterEvent(group, connection, false,
-                            "验证密码错误");
-                    ProxyServer.getInstance().getPluginManager().callEvent(event);
-                    return;
-                }
                 InetSocketAddress address = new InetSocketAddress(args[2], Integer.parseInt(args[3]));
-                String name = getServerName(address);
-                if (name == null) {
-                    connection.sendMessage("HamsterService", "registerFailed 未被BC注册为子服");
-                    connection.disconnect();
-                    ServiceClientRegisterEvent event = new ServiceClientRegisterEvent(group, connection, false,
-                            String.format("地址 %s:%d 未被注册为合法的子服", address.getHostString(), address.getPort()));
-                    ProxyServer.getInstance().getPluginManager().callEvent(event);
-                    return;
-                }
-                connection.setName(name);
+                connection.setName(serverID);
                 connection.setBukkitPort(address.getPort());
                 connection.setBukkitAddress(address.getHostString());
                 connection.setRegistered();
                 group.addConnection(connection);
-                connection.sendMessage("HamsterService", "registered " + name);
+                connection.sendMessage("HamsterService", "registered " + serverID);
                 ProxyServer.getInstance().getPluginManager().callEvent(new ServiceClientRegisterEvent(group, connection, true));
             } catch (Exception e) {
                 connection.sendMessage("HamsterService", "registerFailed 验证参数不正确");

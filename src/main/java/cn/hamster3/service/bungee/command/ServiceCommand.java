@@ -15,7 +15,6 @@ public class ServiceCommand extends Command {
         commands = new HashMap<>();
         commands.put("info", new InfoCommand());
         commands.put("list", new ListCommand());
-        commands.put("start", new StartCommand());
         commands.put("close", new CloseCommand());
         commands.put("message", new MessageCommand());
         commands.put("broadcast", new BroadcastCommand());

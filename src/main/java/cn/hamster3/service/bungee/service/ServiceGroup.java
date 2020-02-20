@@ -13,29 +13,28 @@ import io.netty.util.concurrent.Future;
 import net.md_5.bungee.api.ProxyServer;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.HashSet;
 
+@SuppressWarnings("unused")
 public class ServiceGroup {
     private boolean closed;
 
     private String host;
     private int port;
     private String name;
-    private String password;
+    private HashMap<String, String> serverID;
+
 
     private ServerBootstrap bootstrap;
     private NioEventLoopGroup loopGroup;
     private HashSet<ServiceConnection> connections;
 
-    public ServiceGroup(int port, String name, String password) {
-        this("localhost", port, name, password);
-    }
-
-    public ServiceGroup(String host, int port, String name, String password) {
+    public ServiceGroup(String host, int port, String name, HashMap<String, String> serverID) {
         this.host = host;
         this.port = port;
         this.name = name;
-        this.password = password;
+        this.serverID = serverID;
         connections = new HashSet<>();
 
         bootstrap = new ServerBootstrap();
@@ -146,8 +145,8 @@ public class ServiceGroup {
         return name;
     }
 
-    public String getPassword() {
-        return password;
+    public String getServerID(String password) {
+        return serverID.get(password);
     }
 
     public boolean isClosed() {

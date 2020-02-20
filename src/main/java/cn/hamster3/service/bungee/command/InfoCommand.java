@@ -36,8 +36,6 @@ public class InfoCommand extends CommandExecutor {
         sender.sendMessage(component);
         component.setText("服务组端口: " + group.getPort());
         sender.sendMessage(component);
-        component.setText("服务组密码: " + group.getPassword());
-        sender.sendMessage(component);
 
         component.setColor(ChatColor.YELLOW);
         component.setText("=============== 服务组连接 ===============");
