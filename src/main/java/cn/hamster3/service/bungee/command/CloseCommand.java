@@ -24,18 +24,16 @@ public class CloseCommand extends CommandExecutor {
             return;
         }
         Future<?> f = group.close();
-        if (f == null) {
-            return;
-        }
         f.addListener(future -> {
             if (future.isSuccess()) {
                 component.setText(String.format("服务组 %s 在 %s:%d 上关闭成功!", group.getName(), group.getHost(), group.getPort()));
                 component.setColor(ChatColor.GREEN);
             } else {
-                component.setText(String.format("服务组 %s 在 %s:%d 上关闭异常: %s", group.getName(), group.getHost(), group.getPort(), future.cause()));
+                component.setText(String.format("服务组 %s 在 %s:%d 上关闭时出现异常: %s", group.getName(), group.getHost(), group.getPort(), future.cause()));
             }
             sender.sendMessage(component);
         });
+        ServiceManager.removeGroup(group);
     }
 
 }

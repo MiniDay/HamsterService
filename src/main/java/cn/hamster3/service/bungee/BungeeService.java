@@ -11,7 +11,6 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.io.InputStream;
@@ -66,7 +65,6 @@ public class BungeeService extends Plugin implements Listener {
 
             if (config.getBoolean("debug.connect"))
                 manager.registerListener(this, new ServiceConnectListener());
-
         }
         for (String name : groups.getKeys()) {
             Configuration groupConfig = groups.getSection(name);
@@ -75,9 +73,19 @@ public class BungeeService extends Plugin implements Listener {
             HashMap<String, String> serverID = new HashMap<>();
             Configuration serverIDConfig = groupConfig.getSection("serverID");
             for (String password : serverIDConfig.getKeys()) {
+                if (serverID.containsValue(serverIDConfig.getString(password))) {
+                    getLogger().warning("检测到密码 " + password + " 被分配给了两个不同的服务器ID! 已取消第一个服务器ID之后的其他服务器ID分配!");
+                    continue;
+                }
                 serverID.put(password, serverIDConfig.getString(password));
             }
-            new ServiceGroup(host, port, name, serverID).start();
+            ServiceGroup group = new ServiceGroup(name, host, port, serverID);
+
+            group.start().addListener(future -> {
+                if (future.isSuccess()) {
+                    ServiceManager.addGroup(group);
+                }
+            });
         }
         manager.registerCommand(this, new ServiceCommand());
     }
@@ -88,10 +96,8 @@ public class BungeeService extends Plugin implements Listener {
             if (group.isClosed()) {
                 continue;
             }
-            try {
-                group.close().await();
-            } catch (InterruptedException ignored) {
-            }
+            group.close();
+            ServiceManager.removeGroup(group);
         }
     }
 

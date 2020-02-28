@@ -30,7 +30,7 @@ public class ServiceGroup {
     private NioEventLoopGroup loopGroup;
     private HashSet<ServiceConnection> connections;
 
-    public ServiceGroup(String host, int port, String name, HashMap<String, String> serverID) {
+    public ServiceGroup(String name, String host, int port, HashMap<String, String> serverID) {
         this.host = host;
         this.port = port;
         this.name = name;
@@ -107,7 +107,6 @@ public class ServiceGroup {
         ChannelFuture channelFuture = bootstrap.bind(host, port);
         channelFuture.addListener(future -> {
             if (future.isSuccess()) {
-                ServiceManager.addGroup(ServiceGroup.this);
                 ProxyServer.getInstance().getPluginManager().callEvent(new ServiceGroupStartEvent(this, true));
             } else {
                 ProxyServer.getInstance().getPluginManager().callEvent(new ServiceGroupStartEvent(this, false, future.cause()));
@@ -121,7 +120,6 @@ public class ServiceGroup {
             return null;
         }
         closed = true;
-        ServiceManager.removeGroup(this);
         Future<?> closeFuture = loopGroup.shutdownGracefully();
         closeFuture.addListener(future -> {
             if (future.isSuccess()) {

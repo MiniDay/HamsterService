@@ -35,11 +35,11 @@ public abstract class ServiceManager {
         return null;
     }
 
-    static void addGroup(ServiceGroup group) {
+    public static void addGroup(ServiceGroup group) {
         groups.add(group);
     }
 
-    static void removeGroup(ServiceGroup group) {
+    public static void removeGroup(ServiceGroup group) {
         groups.remove(group);
     }
 }
