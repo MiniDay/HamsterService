@@ -96,14 +96,10 @@ password: "password"
 | /service broadcast <服务组> <消息>  | 在一个服务组内广播一条消息 |
 
 # 开发者
-在BungeeCord端，我们可以使用`cn.hamster3.service.bungee.service.ServiceManager`来获得`ServiceConnection`对象或者`ServiceGroup`对象，它们分别代表子服连接对象和服务组对象。
-
-在Bukkit端，我们可以直接使用`cn.hamster3.service.spigot.HamsterService`类的静态方法`sendMessage()`来向服务器发送消息。
-
-当Bukkit服务器启动时，插件会尝试连接至config中配置的地址，并发送相应的注册信息。
-
-插件因意外而断开连接时，我们会在3秒后尝试重连，在这段时间内你所申请发送的消息都将被缓存，重连成功后我们会自动发送之前未能成功发送的消息。
-
+在BungeeCord端，我们可以使用`cn.hamster3.service.bungee.service.ServiceManager`来获得`ServiceConnection`对象或者`ServiceGroup`对象，它们分别代表子服连接对象和服务组对象。  
+在Bukkit端，我们可以直接使用`cn.hamster3.service.spigot.HamsterService`类的静态方法`sendMessage()`来向服务组广播消息。  
+当Bukkit服务器启动时，插件会尝试连接至config中配置的地址，并发送相应的注册信息。  
+插件因意外而断开连接时，我们会在3秒后尝试重连，在这段时间内你所申请发送的消息都将被缓存，重连成功后我们会自动发送之前未能成功发送的消息。  
 默认情况下，Bukkit向BungeeCord发送的所有消息将会被BungeeCord广播（发送方自己也会收到自己发出去的消息）。若想改变这个策略，请编写BungeeCord插件并监听相应的事件作出处理。
 
 ## BungeeCord端事件
@@ -134,3 +130,14 @@ password: "password"
 |  ServiceReconnectEvent   |    尝试重连事件    |
 |   ServiceRegisterEvent   |    准备注册事件    |
 |  ServiceRegisteredEvent  |    注册完成事件    |
+
+## 插件自带广播消息
+**tag: HamsterService**
+  
+|           消息格式            |                        消息内容                        |
+| :---------------------------: | :----------------------------------------------------: |
+|  serverRegistered 服务器名称  |              某服务器成功在该服务组上注册              |
+| serverDisconnected 服务器名称 |             某服务器断开了与该服务组的链接             |
+|      register 服务器密码      | 子服请求注册至服务组, 这条消息不会被广播. 只有BC能收到 |
+|     registered 服务器名称     |  注册服务组成功, 这条消息不会被广播. 只有注册方会收到  |
+|      registerFailed 原因      |  注册服务组失败, 这条消息不会被广播. 只有注册方会收到  |

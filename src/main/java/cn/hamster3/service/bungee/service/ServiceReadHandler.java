@@ -4,7 +4,6 @@ import cn.hamster3.service.bungee.BungeeService;
 import cn.hamster3.service.bungee.event.ServiceClientDisconnectedEvent;
 import cn.hamster3.service.bungee.event.ServiceClientRegisterEvent;
 import cn.hamster3.service.bungee.event.ServiceGroupReceiveEvent;
-import cn.hamster3.service.spigot.HamsterService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.md_5.bungee.api.ProxyServer;
@@ -40,8 +39,8 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
             group.broadcast(event.getMessage());
             return;
         }
-        if (event.getTag().equalsIgnoreCase("HamsterService")) {
-            execute(event.getMessage().split(" "));
+        if (event.getTag().equals("HamsterService")) {
+            execute(event.getMessage());
             return;
         }
         group.broadcast(event.getTag(), event.getMessage());
@@ -54,22 +53,28 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
         ServiceClientDisconnectedEvent disconnectionEvent = new ServiceClientDisconnectedEvent(group, connection);
         ProxyServer.getInstance().getPluginManager().callEvent(disconnectionEvent);
         BungeeService.warning("服务器 %s 断开了与 服务组 %s 的连接!", connection.getName(), group.getName());
+
+        if (!connection.isRegistered()) {
+            return;
+        }
+        group.broadcast("HamsterService", "serverDisconnected %s", connection.getName());
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        HamsterService.warning("与客户端 %s 的通信中出现了一个错误: ", connection.getName());
+        BungeeService.warning("与客户端 %s 的通信中出现了一个错误: ", connection.getName());
         cause.printStackTrace();
     }
 
-    private void execute(String[] args) {
+    private void execute(String message) {
+        String[] args = message.split(" ");
         if (args[0].equalsIgnoreCase("register")) {
             if (connection.isRegistered()) {
                 return;
             }
             String serverID = group.getServerID(args[1]);
             if (serverID == null) {
-                connection.sendMessage("HamsterService", "registerFailed 服务组未设定密码: " + args[1]);
+                connection.sendMessage("HamsterService", "registerFailed 服务组未设定密码:" + args[1]);
                 connection.disconnect();
                 ServiceClientRegisterEvent event = new ServiceClientRegisterEvent(group, connection, false, "服务组未设定该密码");
                 ProxyServer.getInstance().getPluginManager().callEvent(event);
@@ -84,6 +89,7 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
                 group.addConnection(connection);
                 connection.sendMessage("HamsterService", "registered " + serverID);
                 ProxyServer.getInstance().getPluginManager().callEvent(new ServiceClientRegisterEvent(group, connection, true));
+                group.broadcast("HamsterService", "serverRegistered %s", serverID);
             } catch (Exception e) {
                 connection.sendMessage("HamsterService", "registerFailed 验证参数不正确");
                 connection.disconnect();

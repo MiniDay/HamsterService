@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public final class HamsterService extends JavaPlugin {
+    // 当连接因异常断开时, 要发送的消息将会被存在这里, 等待服务器重新连接后再发送.
     static ArrayList<ServicePreSendEvent> messages;
+    private static HamsterService instance;
     private static boolean enable;
     private static Logger logger;
     private static Channel channel;
@@ -45,12 +47,8 @@ public final class HamsterService extends JavaPlugin {
         logger.warning(msg);
     }
 
-    public static void warning(String msg, Object... objects) {
-        logger.warning(String.format(msg, objects));
-    }
-
     public static void sendMessage(String message) {
-        new Thread(() -> {
+        Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
             if (message == null) {
                 throw new IllegalArgumentException("消息不能被设置为 null !");
             }
@@ -60,7 +58,7 @@ public final class HamsterService extends JavaPlugin {
             ServicePreSendEvent event = new ServicePreSendEvent(message);
             Bukkit.getPluginManager().callEvent(event);
             sendMessage(event);
-        }).start();
+        });
     }
 
     public static void sendMessage(String message, Object... objects) {
@@ -68,7 +66,7 @@ public final class HamsterService extends JavaPlugin {
     }
 
     public static void sendMessage(String tag, String message) {
-        new Thread(() -> {
+        Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
             if (tag == null) {
                 sendMessage(message);
                 return;
@@ -85,7 +83,7 @@ public final class HamsterService extends JavaPlugin {
             ServicePreSendEvent event = new ServicePreSendEvent(tag, message);
             Bukkit.getPluginManager().callEvent(event);
             sendMessage(event);
-        }).start();
+        });
     }
 
     public static void sendMessage(String tag, String message, Object... objects) {
@@ -181,6 +179,7 @@ public final class HamsterService extends JavaPlugin {
     public void onEnable() {
         enable = true;
         messages = new ArrayList<>();
+        instance = this;
 
         logger = getLogger();
         saveDefaultConfig();
