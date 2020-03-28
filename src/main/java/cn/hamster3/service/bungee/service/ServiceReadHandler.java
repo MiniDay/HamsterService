@@ -93,6 +93,7 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
             } catch (Exception e) {
                 connection.sendMessage("HamsterService", "registerFailed 验证参数不正确");
                 connection.disconnect();
+                e.printStackTrace();
                 ServiceClientRegisterEvent event = new ServiceClientRegisterEvent(group, connection, false,
                         "验证参数不正确");
                 ProxyServer.getInstance().getPluginManager().callEvent(event);

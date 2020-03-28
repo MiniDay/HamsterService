@@ -86,14 +86,15 @@ password: "password"
 # 命令
 以下所有命令均需要`service.admin`权限才运行执行。
 
-|                命令                 |            描述            |
-| :---------------------------------: | :------------------------: |
-|            /service list            |     查看所有服务组列表     |
-|       /service info <服务组>        |    查看某个服务组的信息    |
-| /service start <组名> <密码> <端口> |       打开一个服务组       |
-|       /service close <服务组>       |       关闭一个服务组       |
-| /service message <子服名称> <消息>  | 单独给某个服务器发一条消息 |
-| /service broadcast <服务组> <消息>  | 在一个服务组内广播一条消息 |
+|                命令                 |                       描述                       |
+| :---------------------------------: | :----------------------------------------------: |
+|            /service list            |                查看所有服务组列表                |
+|       /service info <服务组>        |               查看某个服务组的信息               |
+| /service start <组名> <密码> <端口> |                  打开一个服务组                  |
+|       /service close <服务组>       |                  关闭一个服务组                  |
+| /service message <子服名称> <消息>  |            单独给某个服务器发一条消息            |
+| /service broadcast <服务组> <消息>  |            在一个服务组内广播一条消息            |
+|  /service command <服务组> <命令>   | 让该服务组内所有的服务器以控制台身份执行一条命令 |
 
 # 开发者
 在BungeeCord端，我们可以使用`cn.hamster3.service.bungee.service.ServiceManager`来获得`ServiceConnection`对象或者`ServiceGroup`对象，它们分别代表子服连接对象和服务组对象。  
@@ -138,6 +139,7 @@ password: "password"
 | :---------------------------: | :----------------------------------------------------: |
 |  serverRegistered 服务器名称  |              某服务器成功在该服务组上注册              |
 | serverDisconnected 服务器名称 |             某服务器断开了与该服务组的链接             |
+|       command 命令内容        |                  让服务器执行这条命令                  |
 |      register 服务器密码      | 子服请求注册至服务组, 这条消息不会被广播. 只有BC能收到 |
 |     registered 服务器名称     |  注册服务组成功, 这条消息不会被广播. 只有注册方会收到  |
 |      registerFailed 原因      |  注册服务组失败, 这条消息不会被广播. 只有注册方会收到  |

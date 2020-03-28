@@ -1,10 +1,7 @@
 package cn.hamster3.service.spigot;
 
 import cn.hamster3.service.spigot.event.*;
-import cn.hamster3.service.spigot.listener.ServiceConnectListener;
-import cn.hamster3.service.spigot.listener.ServiceReceiveListener;
-import cn.hamster3.service.spigot.listener.ServiceRegisterListener;
-import cn.hamster3.service.spigot.listener.ServiceSendListener;
+import cn.hamster3.service.spigot.listener.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -211,6 +208,7 @@ public final class HamsterService extends JavaPlugin {
                 .handler(new ServiceInitHandler());
         Bukkit.getPluginManager().callEvent(new ServiceConnectEvent(false));
         connect();
+        Bukkit.getPluginManager().registerEvents(new MainServiceListener(this), this);
     }
 
     @Override

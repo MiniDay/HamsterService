@@ -17,6 +17,7 @@ public class ServiceCommand extends Command {
         commands.put("list", new ListCommand());
         commands.put("close", new CloseCommand());
         commands.put("message", new MessageCommand());
+        commands.put("command", new DispatchCommand());
         commands.put("broadcast", new BroadcastCommand());
     }
 
