@@ -2,6 +2,7 @@
 基于Netty的Bukkit服务端间广播消息服务插件
 
 # 现已支持构建工具
+[![](https://jitpack.io/v/cn.hamster3/HamsterService.svg)](https://jitpack.io/#cn.hamster3/HamsterService)
 ## Maven
 ```xml
 	<repositories>
@@ -13,7 +14,7 @@
 ```
 ```xml
 	<dependency>
-	    <groupId>com.github.MiniDay</groupId>
+	    <groupId>cn.hamster3</groupId>
 	    <artifactId>HamsterService</artifactId>
 	    <version>1.3-SNAPSHOT</version>
         <scope>provided</scope>
@@ -29,7 +30,7 @@
 ```
 ```gradle
 	dependencies {
-	        compileOnly 'com.github.MiniDay:HamsterService:Tag'
+	        compileOnly 'cn.hamster3:HamsterService:1.3-SNAPSHOT'
 	}
 ```
 
