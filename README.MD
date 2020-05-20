@@ -1,6 +1,38 @@
 # HamsterService
 基于Netty的Bukkit服务端间广播消息服务插件
 
+# 现已支持构建工具
+## Maven
+```xml
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+```
+```xml
+	<dependency>
+	    <groupId>com.github.MiniDay</groupId>
+	    <artifactId>HamsterService</artifactId>
+	    <version>1.3-SNAPSHOT</version>
+        <scope>provided</scope>
+	</dependency>
+```
+## Gradle
+```gradle
+	allprojects {
+		repositories {
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+```gradle
+	dependencies {
+	        compileOnly 'com.github.MiniDay:HamsterService:Tag'
+	}
+```
+
 # 工作方式
 在BungeeCord端上运行的插件会在启动时绑定某一个端口以便开启服务，而在Bukkit端上运行的插件则会在启动时尝试连接上这些服务。
 
