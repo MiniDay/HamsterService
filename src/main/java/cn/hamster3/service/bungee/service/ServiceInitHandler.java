@@ -12,7 +12,7 @@ import net.md_5.bungee.api.ProxyServer;
 import java.nio.charset.StandardCharsets;
 
 class ServiceInitHandler extends ChannelInitializer<NioSocketChannel> {
-    private ServiceGroup group;
+    private final ServiceGroup group;
 
     public ServiceInitHandler(ServiceGroup group) {
         this.group = group;

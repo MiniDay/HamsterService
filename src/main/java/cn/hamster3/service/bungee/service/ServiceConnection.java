@@ -16,8 +16,8 @@ public class ServiceConnection {
     private String name;
     private boolean registered;
 
-    private ServiceGroup group;
-    private NioSocketChannel channel;
+    private final ServiceGroup group;
+    private final NioSocketChannel channel;
 
     public ServiceConnection(ServiceGroup group, NioSocketChannel channel) {
         this.group = group;

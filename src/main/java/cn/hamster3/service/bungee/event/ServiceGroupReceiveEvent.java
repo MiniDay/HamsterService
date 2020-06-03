@@ -5,7 +5,7 @@ import cn.hamster3.service.bungee.service.ServiceGroup;
 import net.md_5.bungee.api.plugin.Cancellable;
 
 public class ServiceGroupReceiveEvent extends ServiceMessageEvent implements Cancellable {
-    private ServiceConnection connection;
+    private final ServiceConnection connection;
 
     private boolean cancelled;
 

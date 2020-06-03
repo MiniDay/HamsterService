@@ -3,11 +3,14 @@ package cn.hamster3.service.spigot.listener;
 import cn.hamster3.service.spigot.HamsterService;
 import cn.hamster3.service.spigot.event.ServiceReceiveEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.UUID;
+
 public class MainServiceListener implements Listener {
-    private HamsterService plugin;
+    private final HamsterService plugin;
 
     public MainServiceListener(HamsterService plugin) {
         this.plugin = plugin;
@@ -22,8 +25,21 @@ public class MainServiceListener implements Listener {
             return;
         }
         String[] args = event.getMessage().split(" ");
-        if ("command".equals(args[0])) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), event.getMessage().substring(8)), 1);
+        switch (args[0]) {
+            case "command": {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), event.getMessage().substring(8)), 1);
+                break;
+            }
+            case "sendMessage": {
+                Player player = Bukkit.getPlayer(UUID.fromString(args[1]));
+                if (player == null) {
+                    break;
+                }
+                // "sendMessage 8311709b-1550-3cb6-bb6e-1d7f72d2d304 消息内容";
+                // 第49个字符之后为消息内容
+                player.sendMessage(event.getMessage().substring(49));
+                break;
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 public class ServiceConnectedEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    private boolean success;
+    private final boolean success;
     private Throwable cause;
 
     public ServiceConnectedEvent() {

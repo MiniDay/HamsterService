@@ -7,9 +7,9 @@ import net.md_5.bungee.api.plugin.Event;
  * 桥接组关闭事件
  */
 public class ServiceGroupCloseEvent extends Event {
-    private ServiceGroup group;
+    private final ServiceGroup group;
 
-    private boolean success;
+    private final boolean success;
     private Throwable cause;
 
     public ServiceGroupCloseEvent(ServiceGroup group, boolean success) {

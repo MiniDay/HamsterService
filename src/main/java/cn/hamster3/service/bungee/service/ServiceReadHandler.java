@@ -11,8 +11,8 @@ import net.md_5.bungee.api.ProxyServer;
 import java.net.InetSocketAddress;
 
 class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
-    private ServiceGroup group;
-    private ServiceConnection connection;
+    private final ServiceGroup group;
+    private final ServiceConnection connection;
 
     public ServiceReadHandler(ServiceGroup group, ServiceConnection connection) {
         this.group = group;

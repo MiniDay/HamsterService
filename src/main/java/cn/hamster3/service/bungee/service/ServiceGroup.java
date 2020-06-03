@@ -20,15 +20,15 @@ import java.util.HashSet;
 public class ServiceGroup {
     private boolean closed;
 
-    private String host;
-    private int port;
-    private String name;
-    private HashMap<String, String> serverID;
+    private final String host;
+    private final int port;
+    private final String name;
+    private final HashMap<String, String> serverID;
 
 
-    private ServerBootstrap bootstrap;
-    private NioEventLoopGroup loopGroup;
-    private HashSet<ServiceConnection> connections;
+    private final ServerBootstrap bootstrap;
+    private final NioEventLoopGroup loopGroup;
+    private final HashSet<ServiceConnection> connections;
 
     public ServiceGroup(String name, String host, int port, HashMap<String, String> serverID) {
         this.host = host;

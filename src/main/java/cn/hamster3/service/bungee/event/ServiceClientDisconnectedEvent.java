@@ -5,8 +5,8 @@ import cn.hamster3.service.bungee.service.ServiceGroup;
 import net.md_5.bungee.api.plugin.Event;
 
 public class ServiceClientDisconnectedEvent extends Event {
-    private ServiceGroup group;
-    private ServiceConnection connection;
+    private final ServiceGroup group;
+    private final ServiceConnection connection;
 
     public ServiceClientDisconnectedEvent(ServiceGroup group, ServiceConnection connection) {
         this.group = group;

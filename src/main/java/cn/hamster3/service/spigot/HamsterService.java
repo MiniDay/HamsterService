@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public final class HamsterService extends JavaPlugin {
@@ -85,6 +86,11 @@ public final class HamsterService extends JavaPlugin {
 
     public static void sendMessage(String tag, String message, Object... objects) {
         sendMessage(tag, String.format(message, objects));
+    }
+
+    public static void sendMessage(UUID uuid, String message) {
+
+        sendMessage("HamsterService", "sendMessage %s %s", uuid, message);
     }
 
     static void sendMessage(ServicePreSendEvent event) {

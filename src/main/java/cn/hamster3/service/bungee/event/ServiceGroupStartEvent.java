@@ -7,8 +7,8 @@ import net.md_5.bungee.api.plugin.Event;
  * 桥接组启动事件
  */
 public class ServiceGroupStartEvent extends Event {
-    private ServiceGroup group;
-    private boolean success;
+    private final ServiceGroup group;
+    private final boolean success;
     private Throwable cause;
 
     public ServiceGroupStartEvent(ServiceGroup group, boolean success) {

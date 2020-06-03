@@ -8,7 +8,7 @@ import net.md_5.bungee.api.plugin.Cancellable;
  * 准备发送一条消息
  */
 public class ServicePreSendClientEvent extends ServiceMessageEvent implements Cancellable {
-    private ServiceConnection connection;
+    private final ServiceConnection connection;
 
     private boolean cancelled;
 

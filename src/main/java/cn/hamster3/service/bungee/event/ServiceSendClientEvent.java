@@ -4,9 +4,9 @@ import cn.hamster3.service.bungee.service.ServiceConnection;
 import cn.hamster3.service.bungee.service.ServiceGroup;
 
 public class ServiceSendClientEvent extends ServiceMessageEvent {
-    private ServiceConnection connection;
+    private final ServiceConnection connection;
 
-    private boolean success;
+    private final boolean success;
     private Throwable cause;
 
     public ServiceSendClientEvent(String message, ServiceGroup group, ServiceConnection connection) {

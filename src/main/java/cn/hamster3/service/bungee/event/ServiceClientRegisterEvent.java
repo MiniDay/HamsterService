@@ -5,10 +5,10 @@ import cn.hamster3.service.bungee.service.ServiceGroup;
 import net.md_5.bungee.api.plugin.Event;
 
 public class ServiceClientRegisterEvent extends Event {
-    private ServiceGroup group;
-    private ServiceConnection connection;
+    private final ServiceGroup group;
+    private final ServiceConnection connection;
 
-    private boolean success;
+    private final boolean success;
     private String cause;
 
     public ServiceClientRegisterEvent(ServiceGroup group, ServiceConnection connection, boolean success) {

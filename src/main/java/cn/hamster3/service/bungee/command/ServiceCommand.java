@@ -8,7 +8,7 @@ import net.md_5.bungee.api.plugin.Command;
 import java.util.HashMap;
 
 public class ServiceCommand extends Command {
-    private HashMap<String, CommandExecutor> commands;
+    private final HashMap<String, CommandExecutor> commands;
 
     public ServiceCommand() {
         super("HamsterService", "service.admin", "service");

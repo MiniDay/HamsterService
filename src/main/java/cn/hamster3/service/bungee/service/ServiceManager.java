@@ -6,7 +6,7 @@ import java.util.HashSet;
  * 用于管理BungeeCord端的所有服务组
  */
 public abstract class ServiceManager {
-    private static HashSet<ServiceGroup> groups = new HashSet<>();
+    private static final HashSet<ServiceGroup> groups = new HashSet<>();
 
     public static HashSet<ServiceGroup> getGroups() {
         return new HashSet<>(groups);
