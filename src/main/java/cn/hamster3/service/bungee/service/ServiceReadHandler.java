@@ -35,13 +35,10 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
         if (event.isCancelled()) {
             return;
         }
-        if (!event.hasTag()) {
-            group.broadcast(event.getMessage());
-            return;
-        }
-        if (event.getTag().equals("HamsterService")) {
-            execute(event.getMessage());
-            return;
+        if ("HamsterService".equals(event.getTag())) {
+            if (executeRegister(event.getMessage())) {
+                return;
+            }
         }
         group.broadcast(event.getTag(), event.getMessage());
     }
@@ -66,11 +63,11 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
         cause.printStackTrace();
     }
 
-    private void execute(String message) {
+    private boolean executeRegister(String message) {
         String[] args = message.split(" ");
         if (args[0].equalsIgnoreCase("register")) {
             if (connection.isRegistered()) {
-                return;
+                return true;
             }
             String serverID = group.getServerID(args[1]);
             if (serverID == null) {
@@ -78,7 +75,7 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
                 connection.disconnect();
                 ServiceClientRegisterEvent event = new ServiceClientRegisterEvent(group, connection, false, "服务组未设定该密码");
                 ProxyServer.getInstance().getPluginManager().callEvent(event);
-                return;
+                return true;
             }
             try {
                 InetSocketAddress address = new InetSocketAddress(args[2], Integer.parseInt(args[3]));
@@ -99,5 +96,6 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
                 ProxyServer.getInstance().getPluginManager().callEvent(event);
             }
         }
+        return false;
     }
 }

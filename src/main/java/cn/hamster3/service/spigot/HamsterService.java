@@ -88,8 +88,8 @@ public final class HamsterService extends JavaPlugin {
         sendMessage(tag, String.format(message, objects));
     }
 
-    public static void sendMessage(UUID uuid, String message) {
-
+    @SuppressWarnings("unused")
+    public static void sendPlayerMessage(UUID uuid, String message) {
         sendMessage("HamsterService", "sendMessage %s %s", uuid, message);
     }
 
