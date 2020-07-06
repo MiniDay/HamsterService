@@ -5,9 +5,9 @@ import cn.hamster3.service.bungee.service.ServiceGroup;
 import net.md_5.bungee.api.plugin.Cancellable;
 
 /**
- * 准备发送一条消息
+ * 消息发送给客户端之前产生的事件
  */
-public class ServicePreSendClientEvent extends ServiceMessageEvent implements Cancellable {
+public class ServicePreSendClientEvent extends ServiceGroupMessageEvent implements Cancellable {
     private final ServiceConnection connection;
 
     private boolean cancelled;

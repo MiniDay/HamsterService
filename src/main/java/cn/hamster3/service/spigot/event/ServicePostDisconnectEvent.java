@@ -1,31 +1,23 @@
 package cn.hamster3.service.spigot.event;
 
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class ServiceSendEvent extends ServiceMessageEvent {
+public class ServicePostDisconnectEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    private boolean success;
+    private final boolean success;
     private Throwable cause;
 
-    public ServiceSendEvent(String message) {
-        super(message);
+    public ServicePostDisconnectEvent() {
+        super(true);
+        success = true;
     }
 
-    public ServiceSendEvent(String tag, String message) {
-        super(tag, message);
-    }
-
-    public ServiceSendEvent(String message, Throwable cause) {
-        super(message);
-        this.cause = cause;
+    public ServicePostDisconnectEvent(Throwable cause) {
+        super(true);
         success = false;
-    }
-
-    public ServiceSendEvent(String tag, String message, Throwable cause) {
-        super(tag, message);
         this.cause = cause;
-        success = false;
     }
 
     public static HandlerList getHandlerList() {
@@ -44,4 +36,5 @@ public class ServiceSendEvent extends ServiceMessageEvent {
     public HandlerList getHandlers() {
         return handlers;
     }
+
 }

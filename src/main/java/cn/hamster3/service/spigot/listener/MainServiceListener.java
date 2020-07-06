@@ -5,6 +5,7 @@ import cn.hamster3.service.spigot.event.ServiceReceiveEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.UUID;
@@ -16,7 +17,7 @@ public class MainServiceListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onServiceReceive(ServiceReceiveEvent event) {
         if (!event.hasTag()) {
             return;

@@ -21,12 +21,12 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        Bukkit.getPluginManager().callEvent(new ServiceDisconnectEvent());
+        Bukkit.getPluginManager().callEvent(new ServicePreDisconnectEvent());
         ctx.close().addListener(future -> {
             if (future.isSuccess()) {
-                Bukkit.getPluginManager().callEvent(new ServiceDisconnectedEvent());
+                Bukkit.getPluginManager().callEvent(new ServicePostDisconnectEvent());
             } else {
-                Bukkit.getPluginManager().callEvent(new ServiceDisconnectedEvent(future.cause()));
+                Bukkit.getPluginManager().callEvent(new ServicePostDisconnectEvent(future.cause()));
             }
         });
         HamsterService.reconnect();
@@ -41,7 +41,7 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
     private void execute(String[] args) {
         if (args[0].equalsIgnoreCase("registered")) {
             HamsterService.setName(args[1]);
-            Bukkit.getPluginManager().callEvent(new ServiceRegisteredEvent());
+            Bukkit.getPluginManager().callEvent(new ServicePostRegisterEvent());
 
             // 把未发送成功的消息发送回去
             for (ServicePreSendEvent event : HamsterService.messages) {
@@ -49,7 +49,7 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
             }
             HamsterService.messages.clear();
         } else if (args[0].equalsIgnoreCase("registerFailed")) {
-            Bukkit.getPluginManager().callEvent(new ServiceRegisteredEvent(args[1]));
+            Bukkit.getPluginManager().callEvent(new ServicePostRegisterEvent(args[1]));
         }
     }
 }

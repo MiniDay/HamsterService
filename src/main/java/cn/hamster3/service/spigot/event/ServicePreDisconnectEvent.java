@@ -3,10 +3,10 @@ package cn.hamster3.service.spigot.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class ServiceRegisterEvent extends Event {
+public class ServicePreDisconnectEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    public ServiceRegisterEvent() {
+    public ServicePreDisconnectEvent() {
         super(true);
     }
 

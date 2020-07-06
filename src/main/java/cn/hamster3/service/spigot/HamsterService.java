@@ -105,15 +105,15 @@ public final class HamsterService extends JavaPlugin {
         ChannelFutureListener listener = future -> {
             if (future.isSuccess()) {
                 if (event.hasTag()) {
-                    Bukkit.getPluginManager().callEvent(new ServiceSendEvent(event.getTag(), event.getMessage()));
+                    Bukkit.getPluginManager().callEvent(new ServicePostSendEvent(event.getTag(), event.getMessage()));
                 } else {
-                    Bukkit.getPluginManager().callEvent(new ServiceSendEvent(event.getMessage()));
+                    Bukkit.getPluginManager().callEvent(new ServicePostSendEvent(event.getMessage()));
                 }
             } else {
                 if (event.hasTag()) {
-                    Bukkit.getPluginManager().callEvent(new ServiceSendEvent(event.getTag(), event.getMessage(), future.cause()));
+                    Bukkit.getPluginManager().callEvent(new ServicePostSendEvent(event.getTag(), event.getMessage(), future.cause()));
                 } else {
-                    Bukkit.getPluginManager().callEvent(new ServiceSendEvent(event.getMessage(), future.cause()));
+                    Bukkit.getPluginManager().callEvent(new ServicePostSendEvent(event.getMessage(), future.cause()));
                 }
             }
         };
@@ -152,7 +152,7 @@ public final class HamsterService extends JavaPlugin {
         }
         Bukkit.getPluginManager().callEvent(new ServiceReconnectEvent());
         channel = null;
-        Bukkit.getPluginManager().callEvent(new ServiceConnectEvent(true));
+        Bukkit.getPluginManager().callEvent(new ServicePreConnectEvent(true));
         connect();
     }
 
@@ -166,13 +166,13 @@ public final class HamsterService extends JavaPlugin {
         }
         bootstrap.connect(serviceHost, servicePort).addListener((ChannelFutureListener) future -> {
             if (future.isSuccess()) {
-                Bukkit.getPluginManager().callEvent(new ServiceConnectedEvent());
+                Bukkit.getPluginManager().callEvent(new ServicePostConnectEvent());
                 channel = future.channel();
                 InetSocketAddress address = new InetSocketAddress(Bukkit.getIp(), Bukkit.getPort());
-                Bukkit.getPluginManager().callEvent(new ServiceRegisterEvent());
+                Bukkit.getPluginManager().callEvent(new ServicePreRegisterEvent());
                 sendMessage("HamsterService", String.format("register %s %s %d", servicePassword, address.getHostString(), address.getPort()));
             } else {
-                Bukkit.getPluginManager().callEvent(new ServiceConnectedEvent(future.cause()));
+                Bukkit.getPluginManager().callEvent(new ServicePostConnectEvent(future.cause()));
                 reconnect();
             }
         });
@@ -212,7 +212,7 @@ public final class HamsterService extends JavaPlugin {
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(new ServiceInitHandler());
-        Bukkit.getPluginManager().callEvent(new ServiceConnectEvent(false));
+        Bukkit.getPluginManager().callEvent(new ServicePreConnectEvent(false));
         connect();
         Bukkit.getPluginManager().registerEvents(new MainServiceListener(this), this);
     }

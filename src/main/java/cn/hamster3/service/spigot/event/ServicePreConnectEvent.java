@@ -3,11 +3,11 @@ package cn.hamster3.service.spigot.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class ServiceDisconnectEvent extends Event {
+public class ServicePreConnectEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
-    public ServiceDisconnectEvent() {
-        super(true);
+    public ServicePreConnectEvent(boolean isAsync) {
+        super(isAsync);
     }
 
     public static HandlerList getHandlerList() {

@@ -3,18 +3,18 @@ package cn.hamster3.service.spigot.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class ServiceRegisteredEvent extends Event {
+public class ServicePostConnectEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
 
     private final boolean success;
-    private String cause;
+    private Throwable cause;
 
-    public ServiceRegisteredEvent() {
+    public ServicePostConnectEvent() {
         super(true);
         success = true;
     }
 
-    public ServiceRegisteredEvent(String cause) {
+    public ServicePostConnectEvent(Throwable cause) {
         super(true);
         success = false;
         this.cause = cause;
@@ -28,7 +28,7 @@ public class ServiceRegisteredEvent extends Event {
         return success;
     }
 
-    public String getCause() {
+    public Throwable getCause() {
         return cause;
     }
 

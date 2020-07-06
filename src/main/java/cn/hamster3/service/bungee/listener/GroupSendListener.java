@@ -1,13 +1,13 @@
 package cn.hamster3.service.bungee.listener;
 
 import cn.hamster3.service.bungee.BungeeService;
-import cn.hamster3.service.bungee.event.ServiceSendClientEvent;
+import cn.hamster3.service.bungee.event.ServicePostSendClientEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 public class GroupSendListener implements Listener {
     @EventHandler
-    public void onServiceSend(ServiceSendClientEvent event) {
+    public void onServiceSend(ServicePostSendClientEvent event) {
         if (event.isSuccess()) {
             if (event.hasTag()) {
                 BungeeService.log("[%s] --->> [%s] %s: %s",

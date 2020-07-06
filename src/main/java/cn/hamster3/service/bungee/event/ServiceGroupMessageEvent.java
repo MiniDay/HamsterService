@@ -5,18 +5,21 @@ import net.md_5.bungee.api.plugin.Event;
 
 import java.nio.charset.StandardCharsets;
 
-public class ServiceMessageEvent extends Event {
+/**
+ * 服务组消息事件的基类
+ */
+public class ServiceGroupMessageEvent extends Event {
     private String tag;
     private String message;
 
     private ServiceGroup group;
 
-    public ServiceMessageEvent(String message, ServiceGroup group) {
+    public ServiceGroupMessageEvent(String message, ServiceGroup group) {
         setMessage(message);
         this.group = group;
     }
 
-    public ServiceMessageEvent(String tag, String message, ServiceGroup group) {
+    public ServiceGroupMessageEvent(String tag, String message, ServiceGroup group) {
         if (tag == null) {
             setMessage(message);
             return;

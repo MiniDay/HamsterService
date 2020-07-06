@@ -1,6 +1,6 @@
 package cn.hamster3.service.bungee.service;
 
-import cn.hamster3.service.bungee.event.ServiceGroupBroadcastEvent;
+import cn.hamster3.service.bungee.event.ServiceGroupPostBroadcastEvent;
 import cn.hamster3.service.bungee.event.ServiceGroupCloseEvent;
 import cn.hamster3.service.bungee.event.ServiceGroupPreBroadcastEvent;
 import cn.hamster3.service.bungee.event.ServiceGroupStartEvent;
@@ -94,12 +94,12 @@ public class ServiceGroup {
             for (ServiceConnection connection : connections) {
                 connection.sendMessage(event.getTag(), event.getMessage());
             }
-            ProxyServer.getInstance().getPluginManager().callEvent(new ServiceGroupBroadcastEvent(event.getTag(), event.getMessage(), this));
+            ProxyServer.getInstance().getPluginManager().callEvent(new ServiceGroupPostBroadcastEvent(event.getTag(), event.getMessage(), this));
         } else {
             for (ServiceConnection connection : connections) {
                 connection.sendMessage(event.getMessage());
             }
-            ProxyServer.getInstance().getPluginManager().callEvent(new ServiceGroupBroadcastEvent(event.getMessage(), this));
+            ProxyServer.getInstance().getPluginManager().callEvent(new ServiceGroupPostBroadcastEvent(event.getMessage(), this));
         }
     }
 

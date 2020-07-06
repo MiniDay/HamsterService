@@ -3,7 +3,7 @@ package cn.hamster3.service.bungee.service;
 import cn.hamster3.service.bungee.BungeeService;
 import cn.hamster3.service.bungee.event.ServiceClientDisconnectedEvent;
 import cn.hamster3.service.bungee.event.ServicePreSendClientEvent;
-import cn.hamster3.service.bungee.event.ServiceSendClientEvent;
+import cn.hamster3.service.bungee.event.ServicePostSendClientEvent;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import net.md_5.bungee.api.ProxyServer;
 
@@ -44,7 +44,7 @@ public class ServiceConnection {
         }
         ServicePreSendClientEvent event = new ServicePreSendClientEvent(tag, message, group, this);
         ProxyServer.getInstance().getPluginManager().callEvent(event);
-        sendMessage(event);
+        executeSendEvent(event);
     }
 
     /**
@@ -61,10 +61,10 @@ public class ServiceConnection {
         }
         ServicePreSendClientEvent event = new ServicePreSendClientEvent(message, group, this);
         ProxyServer.getInstance().getPluginManager().callEvent(event);
-        sendMessage(event);
+        executeSendEvent(event);
     }
 
-    private void sendMessage(ServicePreSendClientEvent event) {
+    private void executeSendEvent(ServicePreSendClientEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -72,10 +72,10 @@ public class ServiceConnection {
             channel.writeAndFlush(event.getTag() + ":" + event.getMessage()).addListener(future -> {
                         if (future.isSuccess()) {
                             ProxyServer.getInstance().getPluginManager().callEvent(
-                                    new ServiceSendClientEvent(event.getTag(), event.getMessage(), group, this));
+                                    new ServicePostSendClientEvent(event.getTag(), event.getMessage(), group, this));
                         } else {
                             ProxyServer.getInstance().getPluginManager().callEvent(
-                                    new ServiceSendClientEvent(event.getTag(), event.getMessage(), group, this, future.cause())
+                                    new ServicePostSendClientEvent(event.getTag(), event.getMessage(), group, this, future.cause())
                             );
                         }
                     }
@@ -84,10 +84,10 @@ public class ServiceConnection {
             channel.writeAndFlush(event.getMessage()).addListener(future -> {
                         if (future.isSuccess()) {
                             ProxyServer.getInstance().getPluginManager().callEvent(
-                                    new ServiceSendClientEvent(event.getMessage(), group, this));
+                                    new ServicePostSendClientEvent(event.getMessage(), group, this));
                         } else {
                             ProxyServer.getInstance().getPluginManager().callEvent(
-                                    new ServiceSendClientEvent(event.getMessage(), group, this, future.cause())
+                                    new ServicePostSendClientEvent(event.getMessage(), group, this, future.cause())
                             );
                         }
                     }

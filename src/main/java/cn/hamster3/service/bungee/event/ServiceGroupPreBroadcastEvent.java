@@ -3,7 +3,10 @@ package cn.hamster3.service.bungee.event;
 import cn.hamster3.service.bungee.service.ServiceGroup;
 import net.md_5.bungee.api.plugin.Cancellable;
 
-public class ServiceGroupPreBroadcastEvent extends ServiceMessageEvent implements Cancellable {
+/**
+ * 服务组准备广播一条消息之前产生的事件
+ */
+public class ServiceGroupPreBroadcastEvent extends ServiceGroupMessageEvent implements Cancellable {
     private boolean cancelled;
 
     public ServiceGroupPreBroadcastEvent(String message, ServiceGroup group) {
