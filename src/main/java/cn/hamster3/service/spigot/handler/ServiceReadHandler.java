@@ -1,19 +1,36 @@
-package cn.hamster3.service.spigot;
+package cn.hamster3.service.spigot.handler;
 
+import cn.hamster3.service.spigot.HamsterService;
 import cn.hamster3.service.spigot.event.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.bukkit.Bukkit;
 
-class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
+public class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
+    private final String serviceHost;
+    private final int servicePort;
+    private final String servicePassword;
+
+    private final ServiceInitHandler initHandler;
+
+    public ServiceReadHandler(String serviceHost, int servicePort, String servicePassword, ServiceInitHandler initHandler) {
+        this.serviceHost = serviceHost;
+        this.servicePort = servicePort;
+        this.servicePassword = servicePassword;
+        this.initHandler = initHandler;
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) {
         ServiceReceiveEvent event = new ServiceReceiveEvent(msg);
         Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
         if (!event.hasTag()) {
             return;
         }
-        if (!event.getTag().equalsIgnoreCase("HamsterService")) {
+        if (!event.getTag().equals("HamsterService")) {
             return;
         }
         execute(event.getMessage().split(" "));
@@ -29,7 +46,7 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
                 Bukkit.getPluginManager().callEvent(new ServicePostDisconnectEvent(future.cause()));
             }
         });
-        HamsterService.reconnect();
+        HamsterService.reconnect(serviceHost, servicePort, servicePassword);
     }
 
     @Override
@@ -40,15 +57,20 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
 
     private void execute(String[] args) {
         if (args[0].equalsIgnoreCase("registered")) {
-            HamsterService.setName(args[1]);
+            // 成功注册
+            initHandler.setServerName(args[1]);
+            initHandler.setGroupName(args[2]);
             Bukkit.getPluginManager().callEvent(new ServicePostRegisterEvent());
 
             // 把未发送成功的消息发送回去
-            for (ServicePreSendEvent event : HamsterService.messages) {
+            for (ServicePreSendEvent event : initHandler.getMessages()) {
                 HamsterService.sendMessage(event);
             }
-            HamsterService.messages.clear();
-        } else if (args[0].equalsIgnoreCase("registerFailed")) {
+            initHandler.getMessages().clear();
+            return;
+        }
+        if (args[0].equalsIgnoreCase("registerFailed")) {
+            // 注册失败
             Bukkit.getPluginManager().callEvent(new ServicePostRegisterEvent(args[1]));
         }
     }

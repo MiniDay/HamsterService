@@ -28,6 +28,7 @@ groups:
     port: 8520
     serverID:
       # 密码: 服务器ID
+      # 服务器ID请保持与BC config中的服务器id一致
       # 请为每个服务器分配不同的密码
       "password1": "登录大厅1"
       "password2": "登录大厅2"

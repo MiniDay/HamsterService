@@ -84,7 +84,7 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
                 connection.setBukkitAddress(address.getHostString());
                 connection.setRegistered();
                 group.addConnection(connection);
-                connection.sendMessage("HamsterService", "registered " + serverID);
+                connection.sendMessage("HamsterService", "registered " + serverID + " " + group.getName());
                 ProxyServer.getInstance().getPluginManager().callEvent(new ServiceClientRegisterEvent(group, connection, true));
                 group.broadcast("HamsterService", "serverRegistered %s", serverID);
             } catch (Exception e) {

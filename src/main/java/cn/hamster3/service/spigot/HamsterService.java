@@ -1,9 +1,11 @@
 package cn.hamster3.service.spigot;
 
 import cn.hamster3.service.spigot.event.*;
+import cn.hamster3.service.spigot.handler.ServiceInitHandler;
 import cn.hamster3.service.spigot.listener.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -15,23 +17,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 public final class HamsterService extends JavaPlugin {
-    // 当连接因异常断开时, 要发送的消息将会被存在这里, 等待服务器重新连接后再发送.
-    static ArrayList<ServicePreSendEvent> messages;
     private static HamsterService instance;
     private static boolean enable;
     private static Logger logger;
+
     private static Channel channel;
     private static Bootstrap bootstrap;
-    private static String serverName;
-    private static String serviceHost;
-    private static int servicePort;
-    private static String servicePassword;
     private static NioEventLoopGroup loopGroup;
+    private static ServiceInitHandler serviceInitHandler;
 
     public static void log(String msg) {
         logger.info(msg);
@@ -88,18 +85,13 @@ public final class HamsterService extends JavaPlugin {
         sendMessage(tag, String.format(message, objects));
     }
 
-    @SuppressWarnings("unused")
-    public static void sendPlayerMessage(UUID uuid, String message) {
-        sendMessage("HamsterService", "sendMessage %s %s", uuid, message);
-    }
-
-    static void sendMessage(ServicePreSendEvent event) {
+    public static void sendMessage(ServicePreSendEvent event) {
         if (event.isCancelled()) {
             return;
         }
         // 如果通道暂时不可用则先缓存这些消息
         if (channel == null || !channel.isActive()) {
-            messages.add(event);
+            serviceInitHandler.getMessages().add(event);
             return;
         }
         ChannelFutureListener listener = future -> {
@@ -124,19 +116,23 @@ public final class HamsterService extends JavaPlugin {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static void sendPlayerMessage(UUID uuid, String message) {
+        sendMessage("HamsterService", "sendMessage %s %s", uuid, message);
+    }
+
     public static String getServerName() {
-        return serverName;
+        return serviceInitHandler.getServerName();
     }
 
-    public static String getServiceHost() {
-        return serviceHost;
+    public static String getGroupName() {
+        return serviceInitHandler.getGroupName();
     }
 
-    public static int getServicePort() {
-        return servicePort;
-    }
-
-    static void reconnect() {
+    public static void reconnect(String serviceHost, int servicePort, String servicePassword) {
+        if (channel.isOpen() && channel.isRegistered() && channel.isActive() && channel.isWritable()) {
+            throw new ChannelException("通道可用, 无需重连!");
+        }
         if (!enable) {
             return;
         }
@@ -153,14 +149,10 @@ public final class HamsterService extends JavaPlugin {
         Bukkit.getPluginManager().callEvent(new ServiceReconnectEvent());
         channel = null;
         Bukkit.getPluginManager().callEvent(new ServicePreConnectEvent(true));
-        connect();
+        connect(serviceHost, servicePort, servicePassword);
     }
 
-    static void setName(String name) {
-        serverName = name;
-    }
-
-    private static void connect() {
+    private static void connect(String serviceHost, int servicePort, String servicePassword) {
         if (!enable) {
             return;
         }
@@ -173,7 +165,7 @@ public final class HamsterService extends JavaPlugin {
                 sendMessage("HamsterService", String.format("register %s %s %d", servicePassword, address.getHostString(), address.getPort()));
             } else {
                 Bukkit.getPluginManager().callEvent(new ServicePostConnectEvent(future.cause()));
-                reconnect();
+                reconnect(serviceHost, servicePort, servicePassword);
             }
         });
     }
@@ -181,7 +173,6 @@ public final class HamsterService extends JavaPlugin {
     @Override
     public void onEnable() {
         enable = true;
-        messages = new ArrayList<>();
         instance = this;
 
         logger = getLogger();
@@ -202,18 +193,22 @@ public final class HamsterService extends JavaPlugin {
             if (config.getBoolean("debug.register"))
                 manager.registerEvents(new ServiceRegisterListener(), this);
         }
-        serviceHost = config.getString("host");
-        servicePort = config.getInt("port");
-        servicePassword = config.getString("password");
         loopGroup = new NioEventLoopGroup(3);
         bootstrap = new Bootstrap();
+
+        String host = config.getString("host");
+        int port = config.getInt("port");
+        String password = config.getString("password");
+        serviceInitHandler = new ServiceInitHandler(host, port, password);
+
         bootstrap.group(loopGroup)
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
-                .handler(new ServiceInitHandler());
+                .handler(serviceInitHandler);
+
         Bukkit.getPluginManager().callEvent(new ServicePreConnectEvent(false));
-        connect();
+        connect(host, port, password);
         Bukkit.getPluginManager().registerEvents(new MainServiceListener(this), this);
     }
 

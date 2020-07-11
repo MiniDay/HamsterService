@@ -10,7 +10,7 @@ public class ServiceConnectListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onServiceConnect(ServicePreConnectEvent event) {
-        HamsterService.log("尝试连接至服务器 [%s:%d]", HamsterService.getServiceHost(), HamsterService.getServicePort());
+        HamsterService.log("尝试连接至桥接组...");
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
