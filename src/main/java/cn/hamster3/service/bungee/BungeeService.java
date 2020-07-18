@@ -88,6 +88,7 @@ public class BungeeService extends Plugin implements Listener {
             });
         }
         manager.registerCommand(this, new ServiceCommand());
+        manager.registerListener(this, new ServicePlayerListener());
     }
 
     @Override
