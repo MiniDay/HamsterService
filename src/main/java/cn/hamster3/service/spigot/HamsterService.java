@@ -17,9 +17,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+@SuppressWarnings("unused")
 public final class HamsterService extends JavaPlugin {
     private static HamsterService instance;
     private static boolean enable;
@@ -29,6 +31,8 @@ public final class HamsterService extends JavaPlugin {
     private static Bootstrap bootstrap;
     private static NioEventLoopGroup loopGroup;
     private static ServiceInitHandler serviceInitHandler;
+
+    private static MainServiceListener mainServiceListener;
 
     public static void log(String msg) {
         logger.info(msg);
@@ -116,7 +120,6 @@ public final class HamsterService extends JavaPlugin {
         }
     }
 
-    @SuppressWarnings("unused")
     public static void sendPlayerMessage(UUID uuid, String message) {
         sendMessage("HamsterService", "sendMessage %s %s", uuid, message);
     }
@@ -127,6 +130,22 @@ public final class HamsterService extends JavaPlugin {
 
     public static String getGroupName() {
         return serviceInitHandler.getGroupName();
+    }
+
+    public static boolean isPlayerOnline(UUID uuid) {
+        return mainServiceListener.getOnlinePlayerUUID().contains(uuid);
+    }
+
+    public static boolean isPlayerOnline(String name) {
+        return mainServiceListener.getOnlinePlayerName().contains(name.toLowerCase());
+    }
+
+    public static HashSet<UUID> getAllOnlinePlayerUUID() {
+        return new HashSet<>(mainServiceListener.getOnlinePlayerUUID());
+    }
+
+    public static HashSet<String> getAllOnlinePlayerName() {
+        return new HashSet<>(mainServiceListener.getOnlinePlayerName());
     }
 
     public static void reconnect(String serviceHost, int servicePort, String servicePassword) {
@@ -206,10 +225,11 @@ public final class HamsterService extends JavaPlugin {
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .handler(serviceInitHandler);
-
         Bukkit.getPluginManager().callEvent(new ServicePreConnectEvent(false));
         connect(host, port, password);
-        Bukkit.getPluginManager().registerEvents(new MainServiceListener(this), this);
+
+        mainServiceListener = new MainServiceListener(this);
+        Bukkit.getPluginManager().registerEvents(mainServiceListener, this);
     }
 
     @Override

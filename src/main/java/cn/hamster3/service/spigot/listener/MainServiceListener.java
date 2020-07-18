@@ -8,13 +8,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import java.util.HashSet;
 import java.util.UUID;
 
 public class MainServiceListener implements Listener {
     private final HamsterService plugin;
+    private final HashSet<UUID> onlinePlayerUUID;
+    private final HashSet<String> onlinePlayerName;
 
     public MainServiceListener(HamsterService plugin) {
         this.plugin = plugin;
+        onlinePlayerUUID = new HashSet<>();
+        onlinePlayerName = new HashSet<>();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -41,6 +46,24 @@ public class MainServiceListener implements Listener {
                 player.sendMessage(event.getMessage().substring(49));
                 break;
             }
+            case "playerConnected": {
+                onlinePlayerUUID.add(UUID.fromString(args[1]));
+                onlinePlayerName.add(args[2]);
+                break;
+            }
+            case "playerDisconnected": {
+                onlinePlayerUUID.remove(UUID.fromString(args[1]));
+                onlinePlayerName.remove(args[2]);
+                break;
+            }
         }
+    }
+
+    public HashSet<UUID> getOnlinePlayerUUID() {
+        return onlinePlayerUUID;
+    }
+
+    public HashSet<String> getOnlinePlayerName() {
+        return onlinePlayerName;
     }
 }

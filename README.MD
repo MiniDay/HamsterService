@@ -21,7 +21,7 @@
 	<dependency>
 	    <groupId>cn.hamster3</groupId>
 	    <artifactId>HamsterService</artifactId>
-	    <version>1.4.2-SNAPSHOT</version>
+	    <version>1.4.3-SNAPSHOT</version>
 	    <scope>provided</scope>
 	</dependency>
 ```
@@ -38,7 +38,7 @@
 
 ``` gradle
 	dependencies {
-	        compileOnly 'cn.hamster3:HamsterService:1.4.2-SNAPSHOT'
+	        compileOnly 'cn.hamster3:HamsterService:1.4.3-SNAPSHOT'
 	}
 ```
 
@@ -197,3 +197,5 @@ password: "password"
 |      register 服务器密码      | 子服请求注册至服务组, 这条消息不会被广播. 只有BC能收到 |
 |     registered 服务器名称     |  注册服务组成功, 这条消息不会被广播. 只有注册方会收到  |
 |      registerFailed 原因      |  注册服务组失败, 这条消息不会被广播. 只有注册方会收到  |
+| playerConnected uuid 名称 | 玩家与服务器建立连接 |
+| playerDisconnected uuid 名称 | 玩家与服务器断开连接 |
