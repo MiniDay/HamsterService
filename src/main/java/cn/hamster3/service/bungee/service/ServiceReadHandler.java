@@ -77,6 +77,13 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
                 ProxyServer.getInstance().getPluginManager().callEvent(event);
                 return true;
             }
+            for (ServiceConnection serviceConnection : group.getConnections()) {
+                if (serviceConnection.getName().equalsIgnoreCase(serverID)) {
+                    connection.sendMessage("HamsterService", "registerFailed 其他服务器已使用该ID. 请检查password是否设置正确.");
+                    connection.disconnect();
+                    return true;
+                }
+            }
             try {
                 InetSocketAddress address = new InetSocketAddress(args[2], Integer.parseInt(args[3]));
                 connection.setName(serverID);
@@ -95,6 +102,7 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
                         "验证参数不正确");
                 ProxyServer.getInstance().getPluginManager().callEvent(event);
             }
+            return true;
         }
         return false;
     }
