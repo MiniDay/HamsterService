@@ -21,7 +21,7 @@
 	<dependency>
 	    <groupId>cn.hamster3</groupId>
 	    <artifactId>HamsterService</artifactId>
-	    <version>1.4.4-SNAPSHOT</version>
+	    <version>1.4.5-SNAPSHOT</version>
 	    <scope>provided</scope>
 	</dependency>
 ```
@@ -38,7 +38,7 @@
 
 ``` gradle
 	dependencies {
-	        compileOnly 'cn.hamster3:HamsterService:1.4.4-SNAPSHOT'
+	        compileOnly 'cn.hamster3:HamsterService:1.4.5-SNAPSHOT'
 	}
 ```
 
@@ -158,31 +158,31 @@ password: "password"
 |     ServiceGroupStartEvent     |        服务组启动事件        |
 |     ServiceGroupCloseEvent     |        服务组关闭事件        |
 |  ServiceClientConnectedEvent   |    某个服务器连接上服务组    |
-|   ServiceClientRegisterEvent   |        某个服务器请求注册事件        |
+|   ServiceClientRegisterEvent   |    某个服务器请求注册事件    |
 | ServiceClientDisconnectedEvent |  某个服务器与服务组断开连接  |
 |    ServiceGroupReceiveEvent    |      服务组收到一条消息      |
-|ServiceGroupPreBroadcastEvent|服务组准备广播一条消息|
-|ServiceGroupPostBroadcastEvent| 服务组广播了一条消息|
+| ServiceGroupPreBroadcastEvent  |    服务组准备广播一条消息    |
+| ServiceGroupPostBroadcastEvent |     服务组广播了一条消息     |
 |   ServicePreSendClientEvent    |    服务组准备发送一条消息    |
-|     ServicePostSendClientEvent      |     服务组发送了一条消息     |
+|   ServicePostSendClientEvent   |     服务组发送了一条消息     |
 |     ServiceSendClientEvent     | 服务组发送了一条有标签的消息 |
 | ServiceGroupPreBroadcastEvent  |      服务组准备广播事件      |
 |   ServiceGroupBroadcastEvent   |        服务组广播事件        |
-|ServiceGroupMessageEvent|所有服务组消息的基类|
+|    ServiceGroupMessageEvent    |     所有服务组消息的基类     |
 
 ## Bukkit端事件
 
-|          事件名          |      事件描述      |
-| :----------------------: | :----------------: |
-|   ServicePreConnectEvent    | 准备连接服务器事件 |
+|           事件名           |      事件描述      |
+| :------------------------: | :----------------: |
+|   ServicePreConnectEvent   | 准备连接服务器事件 |
 |  ServicePostConnectEvent   | 服务器连接完成事件 |
-|  ServicePreDisconnectEvent  |  准备断开连接事件  |
+| ServicePreDisconnectEvent  |  准备断开连接事件  |
 | ServicePostDisconnectEvent |  断开连接完成事件  |
-|   ServicePreSendEvent    |  准备发送消息事件  |
-|     ServicePostSendEvent     |    发送消息事件    |
-|   ServiceReceiveEvent    | 收到服务器消息事件 |
-|  ServiceReconnectEvent   |    尝试重连事件    |
-|   ServicePreRegisterEvent   |    准备注册事件    |
+|    ServicePreSendEvent     |  准备发送消息事件  |
+|    ServicePostSendEvent    |    发送消息事件    |
+|    ServiceReceiveEvent     | 收到服务器消息事件 |
+|   ServiceReconnectEvent    |    尝试重连事件    |
+|  ServicePreRegisterEvent   |    准备注册事件    |
 |  ServicePostRegisterEvent  |    注册完成事件    |
 
 ## 插件自带广播消息
@@ -197,5 +197,5 @@ password: "password"
 |      register 服务器密码      | 子服请求注册至服务组, 这条消息不会被广播. 只有BC能收到 |
 |     registered 服务器名称     |  注册服务组成功, 这条消息不会被广播. 只有注册方会收到  |
 |      registerFailed 原因      |  注册服务组失败, 这条消息不会被广播. 只有注册方会收到  |
-| playerConnected uuid 名称 | 玩家与服务器建立连接 |
-| playerDisconnected uuid 名称 | 玩家与服务器断开连接 |
+|   playerConnected uuid 名称   |                  玩家与服务器建立连接                  |
+| playerDisconnected uuid 名称  |                  玩家与服务器断开连接                  |
