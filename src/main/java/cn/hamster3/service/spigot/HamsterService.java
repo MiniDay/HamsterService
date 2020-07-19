@@ -149,11 +149,11 @@ public final class HamsterService extends JavaPlugin {
     }
 
     public static void reconnect(String serviceHost, int servicePort, String servicePassword) {
-        if (channel.isOpen() && channel.isRegistered() && channel.isActive() && channel.isWritable()) {
-            throw new ChannelException("通道可用, 无需重连!");
-        }
         if (!enable) {
             return;
+        }
+        if (channel.isOpen() && channel.isRegistered() && channel.isActive() && channel.isWritable()) {
+            throw new ChannelException("通道可用, 无需重连!");
         }
         try {
             Thread.sleep(3000);
