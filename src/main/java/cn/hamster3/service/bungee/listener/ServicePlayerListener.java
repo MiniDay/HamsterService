@@ -5,6 +5,7 @@ import cn.hamster3.service.bungee.service.ServiceGroup;
 import cn.hamster3.service.bungee.service.ServiceManager;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -21,11 +22,20 @@ public class ServicePlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onPostLogin(PostLoginEvent event) {
+        ProxiedPlayer player = event.getPlayer();
+        onlinePlayer.put(player.getUniqueId(), player.getName());
+        for (ServiceGroup group : ServiceManager.getGroups()) {
+            group.broadcast("HamsterService", "playerPostLogin %s %s", player.getUniqueId(), player.getName().toLowerCase());
+        }
+    }
+
+    @EventHandler
     public void onPlayerConnected(ServerConnectedEvent event) {
         ProxiedPlayer player = event.getPlayer();
         onlinePlayer.put(player.getUniqueId(), player.getName());
         for (ServiceGroup group : ServiceManager.getGroups()) {
-            group.broadcast("HamsterService", "playerConnected %s %s", player.getUniqueId(), player.getName().toLowerCase());
+            group.broadcast("HamsterService", "playerConnected %s %s %s", player.getUniqueId(), player.getName().toLowerCase(), event.getServer().getInfo().getName());
         }
     }
 

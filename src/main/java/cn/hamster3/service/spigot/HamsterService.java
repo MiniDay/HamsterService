@@ -148,6 +148,18 @@ public final class HamsterService extends JavaPlugin {
         return new HashSet<>(mainServiceListener.getOnlinePlayerName());
     }
 
+    public static String getPlayingServer(UUID uuid) {
+        return mainServiceListener.getPlayingServer(uuid);
+    }
+
+    public static String getPlayingServer(String name) {
+        return mainServiceListener.getPlayingServer(name);
+    }
+
+    public static UUID getPlayerUUID(String name) {
+        return mainServiceListener.getPlayerUUID(name);
+    }
+
     public static void reconnect(String serviceHost, int servicePort, String servicePassword) {
         if (!enable) {
             return;

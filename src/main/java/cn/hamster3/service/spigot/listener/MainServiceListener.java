@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -15,11 +16,17 @@ public class MainServiceListener implements Listener {
     private final HamsterService plugin;
     private final HashSet<UUID> onlinePlayerUUID;
     private final HashSet<String> onlinePlayerName;
+    private final HashMap<String, UUID> playerUUID;
+    private final HashMap<UUID, String> playerServerUUID;
+    private final HashMap<String, String> playerServerName;
 
     public MainServiceListener(HamsterService plugin) {
         this.plugin = plugin;
+        playerUUID = new HashMap<>();
         onlinePlayerUUID = new HashSet<>();
         onlinePlayerName = new HashSet<>();
+        playerServerUUID = new HashMap<>();
+        playerServerName = new HashMap<>();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -46,9 +53,20 @@ public class MainServiceListener implements Listener {
                 player.sendMessage(event.getMessage().substring(49));
                 break;
             }
-            case "playerConnected": {
-                onlinePlayerUUID.add(UUID.fromString(args[1]));
+            case "playerPostLogin": {
+                UUID uuid = UUID.fromString(args[1]);
+                onlinePlayerUUID.add(uuid);
                 onlinePlayerName.add(args[2]);
+                playerUUID.put(args[2], uuid);
+                break;
+            }
+            case "playerConnected": {
+                UUID uuid = UUID.fromString(args[1]);
+                onlinePlayerUUID.add(uuid);
+                onlinePlayerName.add(args[2]);
+                playerServerUUID.put(uuid, args[3]);
+                playerServerName.put(args[2], args[3]);
+                playerUUID.put(args[2], uuid);
                 break;
             }
             case "playerDisconnected": {
@@ -65,5 +83,17 @@ public class MainServiceListener implements Listener {
 
     public HashSet<String> getOnlinePlayerName() {
         return onlinePlayerName;
+    }
+
+    public String getPlayingServer(UUID uuid) {
+        return playerServerUUID.get(uuid);
+    }
+
+    public String getPlayingServer(String name) {
+        return playerServerName.get(name);
+    }
+
+    public UUID getPlayerUUID(String name) {
+        return playerUUID.get(name);
     }
 }
