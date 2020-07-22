@@ -164,7 +164,9 @@ public final class HamsterService extends JavaPlugin {
         if (!enable) {
             return;
         }
-        if (channel.isOpen() && channel.isRegistered() && channel.isActive() && channel.isWritable()) {
+        if (channel != null
+                && channel.isOpen() && channel.isRegistered()
+                && channel.isActive() && channel.isWritable()) {
             throw new ChannelException("通道可用, 无需重连!");
         }
         try {
@@ -172,9 +174,6 @@ public final class HamsterService extends JavaPlugin {
         } catch (InterruptedException ignored) {
         }
         if (loopGroup == null) {
-            return;
-        }
-        if (channel != null && channel.isActive()) {
             return;
         }
         Bukkit.getPluginManager().callEvent(new ServiceReconnectEvent());
