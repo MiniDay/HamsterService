@@ -3,6 +3,7 @@ package cn.hamster3.service.bungee.listener;
 import cn.hamster3.service.bungee.event.ServiceClientRegisterEvent;
 import cn.hamster3.service.bungee.service.ServiceGroup;
 import cn.hamster3.service.bungee.service.ServiceManager;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
@@ -51,7 +52,12 @@ public class ServicePlayerListener implements Listener {
     @EventHandler
     public void onServiceClientConnected(ServiceClientRegisterEvent event) {
         for (Map.Entry<UUID, String> entry : onlinePlayer.entrySet()) {
-            event.getConnection().sendMessage("HamsterService", String.format("playerConnected %s %s", entry.getKey(), entry.getValue().toLowerCase()));
+            UUID uuid = entry.getKey();
+            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
+            if (player == null) {
+                continue;
+            }
+            event.getConnection().sendMessage("HamsterService", String.format("playerConnected %s %s %s", uuid, entry.getValue().toLowerCase(), player.getServer().getInfo().getName()));
         }
     }
 }
