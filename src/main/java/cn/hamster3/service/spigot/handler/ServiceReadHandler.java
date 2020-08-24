@@ -27,10 +27,7 @@ public class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
         if (event.isCancelled()) {
             return;
         }
-        if (!event.hasTag()) {
-            return;
-        }
-        if (!event.getTag().equals("HamsterService")) {
+        if (!"HamsterService".equals(event.getTag())) {
             return;
         }
         execute(event.getMessage().split(" "));

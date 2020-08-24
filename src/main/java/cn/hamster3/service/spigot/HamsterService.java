@@ -47,13 +47,13 @@ public final class HamsterService extends JavaPlugin {
     }
 
     public static void sendMessage(String message) {
+        if (message == null) {
+            throw new IllegalArgumentException("消息不能被为 null!");
+        }
+        if (message.getBytes(StandardCharsets.UTF_8).length >= 0xffff) {
+            throw new IllegalArgumentException("消息总长度不能超过 65535 字节!");
+        }
         Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-            if (message == null) {
-                throw new IllegalArgumentException("消息不能被设置为 null !");
-            }
-            if (message.getBytes(StandardCharsets.UTF_8).length >= 0xffff) {
-                throw new IllegalArgumentException("消息总长度不能超过 65535 字节!");
-            }
             ServicePreSendEvent event = new ServicePreSendEvent(message);
             Bukkit.getPluginManager().callEvent(event);
             sendMessage(event);
@@ -65,20 +65,20 @@ public final class HamsterService extends JavaPlugin {
     }
 
     public static void sendMessage(String tag, String message) {
+        if (tag == null) {
+            sendMessage(message);
+            return;
+        }
+        if (!tag.matches("[a-zA-Z0-9_]*")) {
+            throw new IllegalArgumentException("tag 只能使用字母、数字或下划线!");
+        }
+        if (message == null) {
+            throw new IllegalArgumentException("消息不能被设置为 null !");
+        }
+        if ((tag + ":" + message).getBytes(StandardCharsets.UTF_8).length >= 0xffff) {
+            throw new IllegalArgumentException("消息总长度不能超过 65535 字节!");
+        }
         Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-            if (tag == null) {
-                sendMessage(message);
-                return;
-            }
-            if (!tag.matches("[a-zA-Z0-9_]*")) {
-                throw new IllegalArgumentException("tag 只能使用字母、数字或下划线!");
-            }
-            if (message == null) {
-                throw new IllegalArgumentException("消息不能被设置为 null !");
-            }
-            if ((tag + ":" + message).getBytes(StandardCharsets.UTF_8).length >= 0xffff) {
-                throw new IllegalArgumentException("消息总长度不能超过 65535 字节!");
-            }
             ServicePreSendEvent event = new ServicePreSendEvent(tag, message);
             Bukkit.getPluginManager().callEvent(event);
             sendMessage(event);
@@ -107,7 +107,9 @@ public final class HamsterService extends JavaPlugin {
                 }
             } else {
                 if (event.hasTag()) {
-                    Bukkit.getPluginManager().callEvent(new ServicePostSendEvent(event.getTag(), event.getMessage(), future.cause()));
+                    Bukkit.getPluginManager().callEvent(
+                            new ServicePostSendEvent(event.getTag(), event.getMessage(), future.cause())
+                    );
                 } else {
                     Bukkit.getPluginManager().callEvent(new ServicePostSendEvent(event.getMessage(), future.cause()));
                 }
@@ -192,7 +194,15 @@ public final class HamsterService extends JavaPlugin {
                 channel = future.channel();
                 InetSocketAddress address = new InetSocketAddress(Bukkit.getIp(), Bukkit.getPort());
                 Bukkit.getPluginManager().callEvent(new ServicePreRegisterEvent());
-                sendMessage("HamsterService", String.format("register %s %s %d", servicePassword, address.getHostString(), address.getPort()));
+
+                ServicePreSendEvent event = new ServicePreSendEvent("HamsterService", String.format(
+                        "register %s %s %d",
+                        servicePassword,
+                        address.getHostString(),
+                        address.getPort()
+                ));
+                Bukkit.getPluginManager().callEvent(event);
+                sendMessage(event);
             } else {
                 Bukkit.getPluginManager().callEvent(new ServicePostConnectEvent(future.cause()));
                 reconnect(serviceHost, servicePort, servicePassword);
@@ -201,28 +211,15 @@ public final class HamsterService extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         enable = true;
         instance = this;
-
         logger = getLogger();
+
         saveDefaultConfig();
         reloadConfig();
+
         FileConfiguration config = getConfig();
-        PluginManager manager = Bukkit.getPluginManager();
-        if (config.getBoolean("debug.enable")) {
-
-            if (config.getBoolean("debug.send"))
-                manager.registerEvents(new ServiceSendListener(), this);
-            if (config.getBoolean("debug.receive"))
-                manager.registerEvents(new ServiceReceiveListener(), this);
-
-            if (config.getBoolean("debug.connect"))
-                manager.registerEvents(new ServiceConnectListener(), this);
-
-            if (config.getBoolean("debug.register"))
-                manager.registerEvents(new ServiceRegisterListener(), this);
-        }
         loopGroup = new NioEventLoopGroup(3);
         bootstrap = new Bootstrap();
 
@@ -240,7 +237,25 @@ public final class HamsterService extends JavaPlugin {
         connect(host, port, password);
 
         mainServiceListener = new MainServiceListener(this);
-        Bukkit.getPluginManager().registerEvents(mainServiceListener, this);
+    }
+
+    @Override
+    public void onEnable() {
+        FileConfiguration config = getConfig();
+        PluginManager manager = Bukkit.getPluginManager();
+        if (config.getBoolean("debug.enable")) {
+            if (config.getBoolean("debug.send"))
+                manager.registerEvents(new ServiceSendListener(), this);
+            if (config.getBoolean("debug.receive"))
+                manager.registerEvents(new ServiceReceiveListener(), this);
+
+            if (config.getBoolean("debug.connect"))
+                manager.registerEvents(new ServiceConnectListener(), this);
+
+            if (config.getBoolean("debug.register"))
+                manager.registerEvents(new ServiceRegisterListener(), this);
+        }
+        manager.registerEvents(mainServiceListener, this);
     }
 
     @Override

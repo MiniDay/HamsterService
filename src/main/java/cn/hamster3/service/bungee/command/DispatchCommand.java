@@ -6,7 +6,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class DispatchCommand extends CommandExecutor {
+public class DispatchCommand extends ServiceCommandExecutor {
     @Override
     public void execute(CommandSender sender, String[] args) {
         TextComponent component = new TextComponent();

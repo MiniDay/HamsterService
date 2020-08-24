@@ -2,8 +2,8 @@ package cn.hamster3.service.bungee.service;
 
 import cn.hamster3.service.bungee.BungeeService;
 import cn.hamster3.service.bungee.event.ServiceClientDisconnectedEvent;
-import cn.hamster3.service.bungee.event.ServicePreSendClientEvent;
 import cn.hamster3.service.bungee.event.ServicePostSendClientEvent;
+import cn.hamster3.service.bungee.event.ServicePreSendClientEvent;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import net.md_5.bungee.api.ProxyServer;
 
@@ -11,13 +11,12 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
 public class ServiceConnection {
+    private final ServiceGroup group;
+    private final NioSocketChannel channel;
     private String bukkitAddress;
     private int bukkitPort;
     private String name;
     private boolean registered;
-
-    private final ServiceGroup group;
-    private final NioSocketChannel channel;
 
     public ServiceConnection(ServiceGroup group, NioSocketChannel channel) {
         this.group = group;

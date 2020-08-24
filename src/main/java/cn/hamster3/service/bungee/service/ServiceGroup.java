@@ -1,7 +1,7 @@
 package cn.hamster3.service.bungee.service;
 
-import cn.hamster3.service.bungee.event.ServiceGroupPostBroadcastEvent;
 import cn.hamster3.service.bungee.event.ServiceGroupCloseEvent;
+import cn.hamster3.service.bungee.event.ServiceGroupPostBroadcastEvent;
 import cn.hamster3.service.bungee.event.ServiceGroupPreBroadcastEvent;
 import cn.hamster3.service.bungee.event.ServiceGroupStartEvent;
 import io.netty.bootstrap.ServerBootstrap;
@@ -18,17 +18,14 @@ import java.util.HashSet;
 
 @SuppressWarnings("unused")
 public class ServiceGroup {
-    private boolean closed;
-
     private final String host;
     private final int port;
     private final String name;
     private final HashMap<String, String> serverID;
-
-
     private final ServerBootstrap bootstrap;
     private final NioEventLoopGroup loopGroup;
     private final HashSet<ServiceConnection> connections;
+    private boolean closed;
 
     public ServiceGroup(String name, String host, int port, HashMap<String, String> serverID) {
         this.host = host;

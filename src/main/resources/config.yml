@@ -15,4 +15,4 @@ host: "localhost"
 # 服务端口
 port: 8520
 # 密码
-password: "password"
+password: "password1"

@@ -8,7 +8,7 @@ import net.md_5.bungee.api.plugin.Command;
 import java.util.HashMap;
 
 public class ServiceCommand extends Command {
-    private final HashMap<String, CommandExecutor> commands;
+    private final HashMap<String, ServiceCommandExecutor> commands;
 
     public ServiceCommand() {
         super("HamsterService", "service.admin", "service");
@@ -33,7 +33,7 @@ public class ServiceCommand extends Command {
             sendHelp(sender);
             return;
         }
-        CommandExecutor executor = commands.get(args[0]);
+        ServiceCommandExecutor executor = commands.get(args[0]);
         if (executor == null) {
             TextComponent component = new TextComponent("未找到该命令! 请输入 /service help 以查看命令帮助!");
             component.setColor(ChatColor.RED);
@@ -73,7 +73,7 @@ public class ServiceCommand extends Command {
         sender.sendMessage(component);
 
         component.setColor(ChatColor.GREEN);
-        component.setText("//service message <子服名称> <消息>");
+        component.setText("/service message <子服名称> <消息>");
         sender.sendMessage(component);
         component.setColor(ChatColor.YELLOW);
         component.setText("单独给某个服务器发一条消息");

@@ -9,7 +9,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.HashSet;
 
-public class InfoCommand extends CommandExecutor {
+public class InfoCommand extends ServiceCommandExecutor {
     @Override
     public void execute(CommandSender sender, String[] args) {
         TextComponent component = new TextComponent();
