@@ -11,6 +11,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -272,5 +274,20 @@ public final class HamsterService extends JavaPlugin {
             } catch (InterruptedException ignored) {
             }
         }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length < 1) {
+            sender.sendMessage("§c请输入指令内容!");
+            return true;
+        }
+        StringBuilder builder = new StringBuilder(args[0]);
+        for (int i = 1; i < args.length; i++) {
+            builder.append(' ').append(args[i]);
+        }
+        HamsterService.sendMessage("HamsterService", "executeConsoleCommand " + builder.toString());
+        sender.sendMessage("§a命令执行请求已广播!");
+        return true;
     }
 }

@@ -74,6 +74,12 @@ public class MainServiceListener implements Listener {
                 onlinePlayerName.remove(args[2]);
                 break;
             }
+            case "executeConsoleCommand": {
+                Bukkit.dispatchCommand(
+                        Bukkit.getConsoleSender(),
+                        event.getMessage().substring(22)
+                );
+            }
         }
     }
 
