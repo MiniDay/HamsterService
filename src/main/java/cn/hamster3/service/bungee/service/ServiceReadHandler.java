@@ -39,6 +39,13 @@ class ServiceReadHandler extends SimpleChannelInboundHandler<String> {
             if (executeRegister(event.getMessage())) {
                 return;
             }
+            String[] args = event.getMessage().split(" ");
+            if ("executeConsoleCommand".equals(args[0]) && "global".equals(args[1])) {
+                for (ServiceGroup group : ServiceManager.getGroups()) {
+                    group.broadcast("HamsterService", event.getMessage());
+                }
+                return;
+            }
         }
         group.broadcast(event.getTag(), event.getMessage());
     }

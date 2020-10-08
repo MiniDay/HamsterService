@@ -278,15 +278,27 @@ public final class HamsterService extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 1) {
-            sender.sendMessage("§c请输入指令内容!");
+        if (args.length < 2) {
+            sender.sendMessage("§a/service [global/group] 命令内容");
             return true;
         }
-        StringBuilder builder = new StringBuilder(args[0]);
-        for (int i = 1; i < args.length; i++) {
+        String site;
+        switch (args[0]) {
+            case "global":
+                site = "global";
+                break;
+            case "group":
+                site = "group";
+                break;
+            default:
+                sender.sendMessage("§a/service [global/group] 命令内容");
+                return true;
+        }
+        StringBuilder builder = new StringBuilder(args[1]);
+        for (int i = 2; i < args.length; i++) {
             builder.append(' ').append(args[i]);
         }
-        HamsterService.sendMessage("HamsterService", "executeConsoleCommand " + builder.toString());
+        HamsterService.sendMessage("HamsterService", "executeConsoleCommand %s %s", site, builder.toString());
         sender.sendMessage("§a命令执行请求已广播!");
         return true;
     }

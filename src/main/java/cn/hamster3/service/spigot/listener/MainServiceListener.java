@@ -75,9 +75,13 @@ public class MainServiceListener implements Listener {
                 break;
             }
             case "executeConsoleCommand": {
+                StringBuilder builder = new StringBuilder(args[2]);
+                for (int i = 3; i < args.length; i++) {
+                    builder.append(' ').append(args[i]);
+                }
                 Bukkit.dispatchCommand(
                         Bukkit.getConsoleSender(),
-                        event.getMessage().substring(22)
+                        builder.toString()
                 );
             }
         }

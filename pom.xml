@@ -6,7 +6,7 @@
 
     <groupId>cn.hamster3</groupId>
     <artifactId>HamsterService</artifactId>
-    <version>1.4.11-SNAPSHOT</version>
+    <version>1.4.12-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>HamsterService</name>
@@ -55,8 +55,8 @@
 
     <repositories>
         <repository>
-            <id>papermc-repo</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
             <id>sonatype</id>
