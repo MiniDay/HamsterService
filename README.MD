@@ -2,6 +2,10 @@
 
 基于Netty的Bukkit服务端间广播消息服务插件
 
+项目已停止，不再更新
+
+因为有了更新版: [HamsterService-Parent](https://github.com/MiniDay/HamsterService-Parent)
+
 # 现已支持构建工具
 
 [![](https://jitpack.io/v/cn.hamster3/HamsterService.svg)](https://jitpack.io/#cn.hamster3/HamsterService)
@@ -56,8 +60,7 @@ HamsterService独立安装时没有什么作用，一般只作为其他插件的
 
 # BungeeCord端
 
-启动插件后在插件存档文件夹下
-修改server.yml可以设置不同的服务组以及对应的端口
+启动插件后在插件存档文件夹下 修改server.yml可以设置不同的服务组以及对应的端口
 
 ``` yaml
 # debug配置
@@ -126,8 +129,7 @@ port: 8520
 password: "password"
 ```
 
-先启动BungeeCord服务端，再启动Bukkit服务端。
-至此，你的插件已经完全配置完成。
+先启动BungeeCord服务端，再启动Bukkit服务端。 至此，你的插件已经完全配置完成。
 
 # 命令
 
@@ -145,7 +147,8 @@ password: "password"
 
 # 开发者
 
-在BungeeCord端，我们可以使用 `cn.hamster3.service.bungee.service.ServiceManager` 来获得 `ServiceConnection` 对象或者 `ServiceGroup` 对象，它们分别代表子服连接对象和服务组对象。  
+在BungeeCord端，我们可以使用 `cn.hamster3.service.bungee.service.ServiceManager` 来获得 `ServiceConnection` 对象或者 `ServiceGroup`
+对象，它们分别代表子服连接对象和服务组对象。  
 在Bukkit端，我们可以直接使用 `cn.hamster3.service.spigot.HamsterService` 类的静态方法 `sendMessage()` 来向服务组广播消息。  
 当Bukkit服务器启动时，插件会尝试连接至config中配置的地址，并发送相应的注册信息。  
 插件因意外而断开连接时，我们会在3秒后尝试重连，在这段时间内你所申请发送的消息都将被缓存，重连成功后我们会自动发送之前未能成功发送的消息。  
@@ -188,7 +191,7 @@ password: "password"
 ## 插件自带广播消息
 
 **tag: HamsterService**
-  
+
 |           消息格式            |                        消息内容                        |
 | :---------------------------: | :----------------------------------------------------: |
 |  serverRegistered 服务器名称  |              某服务器成功在该服务组上注册              |
