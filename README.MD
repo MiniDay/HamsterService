@@ -13,19 +13,17 @@
 ## Maven
 
 ``` xml
-	<repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
+        <repository>
+            <id>hamster</id>
+            <url>http://maven.hamster3.cn/repository/maven-public/</url>
+        </repository>
 ```
 
 ``` xml
 	<dependency>
-	    <groupId>cn.hamster3</groupId>
-	    <artifactId>HamsterService</artifactId>
-	    <version>1.4.12-SNAPSHOT</version>
+        <groupId>cn.hamster3</groupId>
+        <artifactId>HamsterService</artifactId>
+        <version>1.4.12-SNAPSHOT</version>
 	    <scope>provided</scope>
 	</dependency>
 ```
@@ -35,7 +33,7 @@
 ``` gradle
 	allprojects {
 		repositories {
-			maven { url 'https://jitpack.io' }
+			maven { url 'http://maven.hamster3.cn/repository/maven-public/' }
 		}
 	}
 ```
